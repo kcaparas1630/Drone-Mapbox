@@ -1,0 +1,6 @@
+# Normalise to LF on checkout so Prettier (endOfLine: lf) sees the same bytes on every machine.
+* text=auto eol=lf
+*.glb binary
+*.png binary
+*.ico binary
+*.woff2 binary

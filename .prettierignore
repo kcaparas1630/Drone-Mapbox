@@ -1,0 +1,18 @@
+# Lockfile and dependencies
+bun.lock
+node_modules/
+
+# Build and test outputs
+dist/
+dev-dist/
+coverage/
+playwright-report/
+test-results/
+
+# Agent working files
+.claude/
+
+# Owner-written documentation stays byte-identical
+docs/**
+CLAUDE.md
+README.md

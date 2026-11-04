@@ -1,0 +1,30 @@
+# Dependencies
+node_modules/
+
+# Build outputs
+dist/
+dev-dist/
+
+# Test outputs
+coverage/
+playwright-report/
+test-results/
+
+# Environment files (only the example is committed)
+.env*
+!.env.example
+*.local
+
+# Hosting
+.vercel/
+
+# Agent working files
+.claude/worktrees/
+.claude/.last-check-ok
+.claude/.stop-hook-attempts
+
+# Editors and OS
+.DS_Store
+.idea/
+.vscode/*
+!.vscode/extensions.json
