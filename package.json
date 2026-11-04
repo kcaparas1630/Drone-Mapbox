@@ -14,7 +14,9 @@
     "format:check": "prettier --check .",
     "test": "vitest run --coverage",
     "test:e2e": "bunx playwright test",
-    "check": "bun run typecheck && bun run lint && bun run format:check && bun run test"
+    "check": "bun run typecheck && bun run lint && bun run format:check && bun run test && bun run check:scripts",
+    "check:scripts": "bun scripts/check-tests-exist.ts && bun scripts/count-todos.ts && bun scripts/count-eslint-disables.ts && bun scripts/check-no-secrets.ts",
+    "check:audit": "bun scripts/check-audit.ts"
   },
   "dependencies": {
     "@mapbox/search-js-react": "^1.6.0",
