@@ -57,7 +57,7 @@ never block an edit); real failures surface at Stop.
 
 ## Local ESLint rules (`eslint/local-rules/`)
 
-Each rule is a file with a sibling test using `RuleTester`:
+Each rule is a TypeScript file built with `createRule` from `eslint/local-rules/create-rule.ts`, with a sibling test using `RuleTester`:
 
 | Rule | Convention |
 |---|---|
@@ -74,12 +74,12 @@ Each rule is a file with a sibling test using `RuleTester`:
 | `one-value-export-per-file` | 013 |
 | `related-type-exports-only` | 013 |
 
-The plugin is loaded inline in `eslint.config.js` (`plugins: { local: localRules }`); no npm
+The plugin is loaded inline in `eslint.config.ts` (`plugins: { local: localRules }`); no npm
 package needed.
 
 ## Enforcement of this convention
 
 - `scripts/check-hooks-configured.ts` (part of `check:scripts`) asserts `.claude/settings.json`
   contains the Stop hook above and that every rule listed here exists in `eslint/local-rules/`
-  and is referenced in `eslint.config.js`.
+  and is referenced in `eslint.config.ts`.
 - CI runs `bun run check` too, so a bypassed hook still fails the PR.

@@ -39,10 +39,10 @@ shared/     config, lib, api, ui, types
 
 | Rule | What it checks |
 |---|---|
-| `boundaries/element-types` | layer direction table above; no same-layer cross-slice imports |
-| `boundaries/entry-point` | imports into a slice go through `index.ts` only |
+| `boundaries/dependencies` (layer policies) | layer direction table above; no same-layer cross-slice imports |
+| `boundaries/dependencies` (entry-point policy, `fileInternalPath: '!index.ts'`) | imports into a slice go through `index.ts` only |
 | `boundaries/no-unknown-files` | every file under `src/` belongs to a known layer/segment |
-| `no-restricted-imports` override for `entities/*/{lib,model}/**` | bans react, react-dom, mapbox-gl, three |
+| `@typescript-eslint/no-restricted-imports` override for `entities/*/{lib,model}/**` | bans react, react-dom, mapbox-gl, three |
 | `no-restricted-globals` override for the same paths | bans `window`, `document`, `navigator`, `localStorage` |
 
 Runs in `bun run lint` → Stop hook. Not auto-fixable.

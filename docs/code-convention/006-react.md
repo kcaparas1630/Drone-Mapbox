@@ -20,11 +20,11 @@
 | Rule | What it checks |
 |---|---|
 | `react-hooks/rules-of-hooks`, `react-hooks/exhaustive-deps` | hook usage |
-| `react/function-component-definition` (`function-declaration`) | component shape |
-| `import/no-default-export` (override allows `src/pages/**`) | named exports |
-| `react/no-danger` | `dangerouslySetInnerHTML` |
-| `react/forbid-component-props` + `react/forbid-dom-props` (`style`) | inline styles |
-| `@typescript-eslint/ban-types` (`React.FC`) | component typing |
+| `no-restricted-syntax` (PascalCase arrow/function expression) | component shape |
+| `import-x/no-default-export` (override allows `src/pages/**` and `*.config.ts`) | named exports |
+| `@eslint-react/dom-no-dangerously-set-innerhtml` + `no-restricted-syntax` | `dangerouslySetInnerHTML` |
+| `no-restricted-syntax` (`JSXAttribute[name.name='style']`) | inline styles |
+| `@typescript-eslint/no-restricted-types` (`FC`, `React.FC`, `FunctionComponent`) | component typing |
 | `no-restricted-syntax` | `dispatch(` inside `src/entities/**/ui/**` |
 
 Runs in `bun run lint` → Stop hook. Partially auto-fixable.

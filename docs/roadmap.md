@@ -12,7 +12,7 @@ Goal: the conventions are executable before any feature exists.
 2. `tsconfig` per convention 004; path alias `@/`.
 3. ESLint flat config: typescript-eslint strict-type-checked, react-hooks, boundaries (FSD map),
    unicorn filename-case, import, vitest plugin; `eslint/local-rules/` with all ten rules and
-   their `RuleTester` tests; `eslint/approved-verbs.js`.
+   their `RuleTester` tests; `eslint/approved-verbs.ts`.
 4. Prettier + tailwind plugin; Vitest config with coverage thresholds scoped to pure paths.
 5. `scripts/`: `stop-hook.ts`, `format-touched-file.ts`, `check-tests-exist.ts`,
    `count-todos.ts`, `count-eslint-disables.ts`, `check-no-secrets.ts`,

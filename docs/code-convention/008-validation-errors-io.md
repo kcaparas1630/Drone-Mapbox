@@ -25,9 +25,9 @@
 |---|---|
 | `local/fetch-through-shared-api` | global `fetch(` outside `src/shared/api/**` |
 | `no-restricted-globals` | `localStorage`, `sessionStorage`, `indexedDB` outside `src/shared/lib/storage/**` |
-| `no-restricted-properties` | `JSON.parse` outside `src/shared/{api,lib/storage}/**` |
+| `no-restricted-properties` | `JSON.parse` in `src/**` outside `src/shared/{api,lib/storage}/**` |
 | `no-empty` (`allowEmptyCatch: false`) | empty catch |
-| `no-console` | all console use outside `shared/lib/report-error.ts` |
+| `no-console` | all console use in `src/**` outside `shared/lib/report-error.ts` (`scripts/**` may print) |
 | `@typescript-eslint/no-floating-promises`, `no-misused-promises` | unhandled async |
 | `fetchJson` / storage function signatures | schema is a required parameter (type-level enforcement) |
 

@@ -15,8 +15,8 @@
 
 | Rule | What it checks |
 |---|---|
-| `react/forbid-dom-props` (`style`) and `react/forbid-component-props` (`style`) | inline styles |
-| `no-restricted-imports` | `styled-components`, `@emotion/*`, `*.module.css` |
+| `no-restricted-syntax` (`JSXAttribute[name.name='style']`) | inline styles |
+| `@typescript-eslint/no-restricted-imports` | `styled-components`, `@emotion/*`, `*.module.css` |
 | `prettier-plugin-tailwindcss` via `prettier --check` | class order |
 | `local/no-css-file-outside-app` | `.css` imports outside `src/app/**` |
 
