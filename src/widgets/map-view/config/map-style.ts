@@ -3,6 +3,7 @@
 export const MAP_STYLE = {
   STYLE_URL: 'mapbox://styles/mapbox/standard',
   DEM_SOURCE_ID: 'mapbox-dem',
+  DRONE_LAYER_ID: 'drone-layer',
   DEM_URL: 'mapbox://mapbox.mapbox-terrain-dem-v1',
   DEM_TILE_SIZE: 512,
   DEM_MAX_ZOOM: 14,

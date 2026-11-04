@@ -1,6 +1,11 @@
 // Public API of the drone entity: simulation state, physics, mode machine, snapshot and persistence.
+export { createDronePlaceholder } from './api/create-drone-placeholder';
+export { disposeObject3d } from './api/dispose-object3d';
+export { loadDroneModel } from './api/load-drone-model';
+export type { LoadDroneModelResult } from './api/load-drone-model';
 export { loadSavedDroneState } from './api/load-saved-drone-state';
 export { saveDroneState } from './api/save-drone-state';
+export { DRONE_MODEL } from './config/drone-model';
 export { clampToBritishColumbia } from './lib/clamp-to-british-columbia';
 export { restoreDroneSpawn } from './lib/restore-drone-spawn';
 export type { DroneSpawnRestoration } from './lib/restore-drone-spawn';

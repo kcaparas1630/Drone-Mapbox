@@ -1,5 +1,7 @@
 // Public API of the geo maths: spherical distance, bearing, destination and mercator projection.
 export { computeDestinationPoint } from './compute-destination-point';
+export { computeHeadingVector } from './compute-heading-vector';
+export type { HeadingVector } from './compute-heading-vector';
 export { computeHaversineDistance } from './compute-haversine-distance';
 export { computeInitialBearing } from './compute-initial-bearing';
 export { computeMercatorUnitsPerMeter } from './compute-mercator-units-per-meter';
