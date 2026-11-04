@@ -6,6 +6,8 @@ import { functionNameStartsWithVerb } from './function-name-starts-with-verb';
 import { noVagueFilename } from './no-vague-filename';
 import { noVagueIdentifier } from './no-vague-identifier';
 import { oneLineFunctionComment } from './one-line-function-comment';
+import { oneValueExportPerFile } from './one-value-export-per-file';
+import { relatedTypeExportsOnly } from './related-type-exports-only';
 
 const LOCAL_RULE_MODULES = {
   'file-purpose-comment': filePurposeComment,
@@ -13,6 +15,8 @@ const LOCAL_RULE_MODULES = {
   'no-vague-filename': noVagueFilename,
   'no-vague-identifier': noVagueIdentifier,
   'one-line-function-comment': oneLineFunctionComment,
+  'one-value-export-per-file': oneValueExportPerFile,
+  'related-type-exports-only': relatedTypeExportsOnly,
 };
 
 export const localRules: ESLint.Plugin = {

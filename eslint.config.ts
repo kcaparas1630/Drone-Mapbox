@@ -97,6 +97,8 @@ export default defineConfig([
       'local/no-vague-filename': 'error',
       'local/no-vague-identifier': 'error',
       'local/one-line-function-comment': 'error',
+      'local/one-value-export-per-file': 'error',
+      'local/related-type-exports-only': 'error',
       'max-classes-per-file': ['error', 1],
       'max-lines': ['error', { max: 200, skipBlankLines: true, skipComments: true }],
       'max-lines-per-function': ['error', { max: 60, skipBlankLines: true, skipComments: true }],
