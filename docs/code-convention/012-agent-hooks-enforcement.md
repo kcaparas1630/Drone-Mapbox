@@ -9,7 +9,8 @@ Stop hook fires. An agent cannot end its turn with a violation in the tree.
 `bun run typecheck && bun run lint && bun run format:check && bun run test && bun run check:scripts`
 
 `check:scripts` = `bun scripts/check-tests-exist.ts && bun scripts/count-todos.ts &&
-bun scripts/count-eslint-disables.ts && bun scripts/check-no-secrets.ts`
+bun scripts/count-eslint-disables.ts && bun scripts/check-no-secrets.ts &&
+bun scripts/check-hooks-configured.ts`
 
 E2E is excluded from the hook (minutes, needs a browser); CI runs it.
 

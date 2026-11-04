@@ -1,0 +1,35 @@
+# CI: installs with the frozen lockfile, runs every convention check, audits dependencies and builds.
+name: ci
+
+on:
+  pull_request:
+  push:
+    branches: [main]
+
+permissions:
+  contents: read
+
+concurrency:
+  group: ci-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  check:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    env:
+      SKIP_INSTALL_SIMPLE_GIT_HOOKS: '1'
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+      - uses: oven-sh/setup-bun@0c5077e51419868618aeaa5fe8019c62421857d6 # v2.2.0
+        with:
+          bun-version: 1.2.18
+      - uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7.1.0
+        with:
+          node-version: 22
+      - run: bun install --frozen-lockfile
+      - run: bun run check
+      - run: bun run check:audit
+      - run: bun run build
+        env:
+          VITE_MAPBOX_TOKEN: ${{ secrets.MAPBOX_DEV_TOKEN }}

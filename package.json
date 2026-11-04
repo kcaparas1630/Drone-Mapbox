@@ -15,8 +15,9 @@
     "test": "vitest run --coverage",
     "test:e2e": "bunx playwright test",
     "check": "bun run typecheck && bun run lint && bun run format:check && bun run test && bun run check:scripts",
-    "check:scripts": "bun scripts/check-tests-exist.ts && bun scripts/count-todos.ts && bun scripts/count-eslint-disables.ts && bun scripts/check-no-secrets.ts",
-    "check:audit": "bun scripts/check-audit.ts"
+    "check:scripts": "bun scripts/check-tests-exist.ts && bun scripts/count-todos.ts && bun scripts/count-eslint-disables.ts && bun scripts/check-no-secrets.ts && bun scripts/check-hooks-configured.ts",
+    "check:audit": "bun scripts/check-audit.ts",
+    "prepare": "simple-git-hooks"
   },
   "dependencies": {
     "@mapbox/search-js-react": "^1.6.0",
@@ -78,5 +79,10 @@
     "vite-plugin-pwa": "^2.0.0",
     "vitest": "^5.1.0",
     "workbox-build": "^7.4.1"
+  },
+  "simple-git-hooks": {
+    "pre-commit": "bun scripts/check-no-secrets.ts --staged",
+    "commit-msg": "bunx commitlint --edit \"$1\"",
+    "pre-push": "bun run check"
   }
 }

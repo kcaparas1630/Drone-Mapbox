@@ -20,6 +20,6 @@
 |---|---|
 | `commitlint` (`@commitlint/config-conventional`, scope-enum = slice names) via `simple-git-hooks` `commit-msg` | commit format |
 | `simple-git-hooks` `pre-push` → `bun run check` | checks before push |
-| GitHub Actions `ci.yml` | `bun install --frozen-lockfile`, `bun run check`, `bun run test:e2e`, `bun audit` |
+| GitHub Actions `ci.yml` | `bun install --frozen-lockfile`, `bun run check`, `bun run test:e2e`, `bun audit` via `bun run check:audit` (fails on high/critical; Bun 1.2 has no level flag) |
 | `.gitignore` + `scripts/check-no-secrets.ts` (greps staged files for `pk.`/`sk.` tokens and `.env`) in `pre-commit` | secrets |
 | Branch protection on `main` (owner configures) | PR + green CI required |

@@ -1,0 +1,17 @@
+{
+  "hooks": {
+    "Stop": [
+      {
+        "hooks": [{ "type": "command", "command": "bun scripts/stop-hook.ts", "timeout": 600 }]
+      }
+    ],
+    "PostToolUse": [
+      {
+        "matcher": "Edit|Write",
+        "hooks": [
+          { "type": "command", "command": "bun scripts/format-touched-file.ts", "timeout": 60 }
+        ]
+      }
+    ]
+  }
+}
