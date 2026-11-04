@@ -63,8 +63,7 @@ const REACT_BANNED_PATTERNS: PatternRestriction[] = [
   },
 ];
 
-// Returns the subpath ban for three and mapbox-gl as a regex, because gitignore-style groups cannot re-include
-// a file under an excluded directory; the Mapbox stylesheet is carved out when allowed.
+// Returns the three/mapbox-gl subpath ban as a regex (groups cannot re-include the allowed Mapbox stylesheet).
 function buildThreeAndMapboxPatterns(isMapboxCssAllowed: boolean): PatternRestriction[] {
   const regex = isMapboxCssAllowed
     ? String.raw`^three/|^mapbox-gl/(?!dist/mapbox-gl\.css$)`

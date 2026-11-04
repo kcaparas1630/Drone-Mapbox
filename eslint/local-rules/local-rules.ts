@@ -1,14 +1,18 @@
 // Local ESLint plugin holding the convention rules no published rule covers (conventions 001-013).
 import type { ESLint } from 'eslint';
 
+import { filePurposeComment } from './file-purpose-comment';
 import { functionNameStartsWithVerb } from './function-name-starts-with-verb';
 import { noVagueFilename } from './no-vague-filename';
 import { noVagueIdentifier } from './no-vague-identifier';
+import { oneLineFunctionComment } from './one-line-function-comment';
 
 const LOCAL_RULE_MODULES = {
+  'file-purpose-comment': filePurposeComment,
   'function-name-starts-with-verb': functionNameStartsWithVerb,
   'no-vague-filename': noVagueFilename,
   'no-vague-identifier': noVagueIdentifier,
+  'one-line-function-comment': oneLineFunctionComment,
 };
 
 export const localRules: ESLint.Plugin = {
