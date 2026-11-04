@@ -10,9 +10,10 @@ const envSchema = z.object({
   VITE_MAPBOX_TOKEN: z
     .string({ error: MISSING_TOKEN_MESSAGE })
     .regex(/^pk\./, 'VITE_MAPBOX_TOKEN must be a public "pk." token, never a secret "sk." token.'),
+  DEV: z.boolean().optional(),
 });
 
-export type EnvConfig = { mapboxToken: string };
+export type EnvConfig = { mapboxToken: string; isDevBuild: boolean };
 
 // Validates the environment and returns the typed config or a developer-facing message.
 export function readEnv(
@@ -22,5 +23,8 @@ export function readEnv(
   if (!parsed.success) {
     return { isOk: false, error: parsed.error.issues.map((issue) => issue.message).join(' ') };
   }
-  return { isOk: true, value: { mapboxToken: parsed.data.VITE_MAPBOX_TOKEN } };
+  return {
+    isOk: true,
+    value: { mapboxToken: parsed.data.VITE_MAPBOX_TOKEN, isDevBuild: parsed.data.DEV === true },
+  };
 }

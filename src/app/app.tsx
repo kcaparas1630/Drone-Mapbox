@@ -22,7 +22,7 @@ export function App({ env, isWebgl2Available }: AppProps) {
   }
   return (
     <Provider store={store}>
-      <MapPage mapboxToken={env.value.mapboxToken} />
+      <MapPage mapboxToken={env.value.mapboxToken} isDevBuild={env.value.isDevBuild} />
       <Toaster />
     </Provider>
   );

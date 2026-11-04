@@ -3,14 +3,19 @@ import { useReducer } from 'react';
 
 import { INITIAL_MAP_STATUS, MapView, mergeMapStatus } from '@/widgets/map-view';
 
-export type MapPageProps = { mapboxToken: string };
+export type MapPageProps = { mapboxToken: string; isDevBuild: boolean };
 
 // Renders the map page.
-export function MapPage({ mapboxToken }: MapPageProps) {
+export function MapPage({ mapboxToken, isDevBuild }: MapPageProps) {
   const [mapStatus, patchMapStatus] = useReducer(mergeMapStatus, INITIAL_MAP_STATUS);
   return (
     <main className="relative h-dvh w-full overflow-hidden" aria-label="FireflyBC map">
-      <MapView mapboxToken={mapboxToken} status={mapStatus} onStatusPatch={patchMapStatus} />
+      <MapView
+        mapboxToken={mapboxToken}
+        isDevBuild={isDevBuild}
+        status={mapStatus}
+        onStatusPatch={patchMapStatus}
+      />
     </main>
   );
 }

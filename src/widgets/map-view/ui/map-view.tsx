@@ -1,33 +1,47 @@
-// The map widget: one full-screen Mapbox map with terrain plus overlays for states where it cannot render.
-import { useRef } from 'react';
+// The map widget: one full-screen Mapbox map with terrain, the flying drone and status overlays.
+import { useRef, useState } from 'react';
 
-import { BC_BOUNDING_BOX } from '@/shared/config';
+import { loadSavedDroneState, restoreDroneSpawn } from '@/entities/drone';
 import { useOnlineStatus } from '@/shared/lib/browser';
+import { reportError } from '@/shared/lib/report-error';
 
 import type { MapStatus, MapStatusPatch } from '../model/map-status.types';
+import { useDroneSimulation } from '../model/use-drone-simulation';
 import { useMapboxMap } from '../model/use-mapbox-map';
 import { MapStatusOverlay } from './map-status-overlay';
 
 export type MapViewProps = {
   mapboxToken: string;
+  isDevBuild: boolean;
   status: MapStatus;
   onStatusPatch: (patch: MapStatusPatch) => void;
 };
 
-// Renders the map container and its status overlay.
-export function MapView({ mapboxToken, status, onStatusPatch }: MapViewProps) {
+// Restores the launch spawn once, warning when a saved position had to be discarded.
+function readLaunchSpawn() {
+  const { spawn, rejectionReason } = restoreDroneSpawn(loadSavedDroneState());
+  if (rejectionReason !== null) {
+    reportError(rejectionReason, 'drone persistence', 'warn');
+  }
+  return spawn;
+}
+
+// Renders the map container, starts the drone on it and shows the status overlay.
+export function MapView({ mapboxToken, isDevBuild, status, onStatusPatch }: MapViewProps) {
   const containerRef = useRef<HTMLDivElement>(null);
+  const [spawn] = useState(readLaunchSpawn);
   const isOnline = useOnlineStatus();
-  useMapboxMap({
+  const map = useMapboxMap({
     containerRef,
     accessToken: mapboxToken,
-    centreLng: BC_BOUNDING_BOX.CENTRE_LNG,
-    centreLat: BC_BOUNDING_BOX.CENTRE_LAT,
+    centreLng: spawn.lng,
+    centreLat: spawn.lat,
     onStatusPatch,
   });
+  useDroneSimulation(map, spawn, isDevBuild);
   return (
     <div className="absolute inset-0 bg-background">
-      <div ref={containerRef} className="h-full w-full" data-testid="map-container" />
+      <div ref={containerRef} className="h-full w-full touch-none" data-testid="map-container" />
       <MapStatusOverlay status={status} isOnline={isOnline} />
     </div>
   );
