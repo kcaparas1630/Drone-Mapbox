@@ -1,6 +1,6 @@
 # ADR 008 — Mapbox Search Box API via @mapbox/search-js-react
 
-Status: Accepted (2026-11-04)
+Status: Accepted (2026-11-04); component choice amended by ADR 019 (proposed)
 
 ## Context
 

@@ -20,7 +20,7 @@
     "prepare": "simple-git-hooks"
   },
   "dependencies": {
-    "@mapbox/search-js-react": "^1.6.0",
+    "@mapbox/search-js-core": "^1.6.0",
     "@reduxjs/toolkit": "^2.14.0",
     "@turf/along": "^7.4.0",
     "@turf/bearing": "^7.4.0",

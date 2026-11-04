@@ -24,6 +24,7 @@ without new information. Status values: `Accepted`, `Superseded by NNN`, `Deprec
 | [016](016-mapbox-token-strategy.md) | Two public tokens: prod (URL-restricted) and dev (unrestricted, minimal scopes) | Accepted |
 | [017](017-no-monitoring-mvp.md) | No error monitoring or analytics in MVP | Accepted |
 | [018](018-documentation-structure.md) | docs/adr + docs/code-convention, documentation before code | Accepted |
+| [019](019-search-box-core-debounced-combobox.md) | Search Box API via search-js-core with a 300 ms debounced combobox (amends 008) | Proposed |
 
 ## Writing a new ADR
 
