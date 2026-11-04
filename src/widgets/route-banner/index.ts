@@ -1,2 +1,2 @@
 // Public API of the route-banner widget.
-export {};
+export { RouteBanner } from './ui/route-banner';

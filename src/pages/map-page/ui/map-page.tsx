@@ -2,12 +2,16 @@
 import { useReducer } from 'react';
 
 import { INITIAL_MAP_STATUS, MapView, mergeMapStatus } from '@/widgets/map-view';
+import { RouteBanner } from '@/widgets/route-banner';
+
+import { useEscapeShortcut } from '../model/use-escape-shortcut';
 
 export type MapPageProps = { mapboxToken: string; isDevBuild: boolean };
 
-// Renders the map page.
+// Renders the map page: map underneath, widgets in a click-through overlay.
 export function MapPage({ mapboxToken, isDevBuild }: MapPageProps) {
   const [mapStatus, patchMapStatus] = useReducer(mergeMapStatus, INITIAL_MAP_STATUS);
+  useEscapeShortcut();
   return (
     <main className="relative h-dvh w-full overflow-hidden" aria-label="FireflyBC map">
       <MapView
@@ -16,6 +20,14 @@ export function MapPage({ mapboxToken, isDevBuild }: MapPageProps) {
         status={mapStatus}
         onStatusPatch={patchMapStatus}
       />
+      <div className="pointer-events-none absolute inset-0 z-10 flex flex-col justify-between gap-2 p-2 sm:p-4">
+        <div className="flex items-start justify-between gap-2" />
+        <div className="flex flex-col items-center gap-2 pb-8 sm:pb-6">
+          <div className="pointer-events-auto flex w-full justify-center">
+            <RouteBanner />
+          </div>
+        </div>
+      </div>
     </main>
   );
 }
