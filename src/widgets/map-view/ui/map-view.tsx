@@ -8,6 +8,7 @@ import { reportError } from '@/shared/lib/report-error';
 import type { MapStatus, MapStatusPatch } from '../model/map-status.types';
 import { useDroneSimulation } from '../model/use-drone-simulation';
 import { useMapboxMap } from '../model/use-mapbox-map';
+import { useRouteLine } from '../model/use-route-line';
 import { MapStatusOverlay } from './map-status-overlay';
 
 export type MapViewProps = {
@@ -39,6 +40,7 @@ export function MapView({ mapboxToken, isDevBuild, status, onStatusPatch }: MapV
     onStatusPatch,
   });
   useDroneSimulation(map, spawn, isDevBuild);
+  useRouteLine(map);
   return (
     <div className="absolute inset-0 bg-background">
       <div ref={containerRef} className="h-full w-full touch-none" data-testid="map-container" />
