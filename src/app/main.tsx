@@ -3,6 +3,7 @@ import { StrictMode } from 'react';
 import { createRoot } from 'react-dom/client';
 
 import { App } from './app';
+import './styles/globals.css';
 
 // Finds the root element in index.html and renders the app inside StrictMode.
 function renderApp(): void {

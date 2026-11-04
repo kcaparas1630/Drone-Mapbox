@@ -1,0 +1,46 @@
+/* Global stylesheet: Tailwind v4, animation utilities and the FireflyBC design tokens (convention 009). */
+@import 'tailwindcss';
+@import 'tw-animate-css';
+
+@theme {
+  --font-sans:
+    ui-sans-serif, system-ui, -apple-system, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+
+  --color-background: oklch(0.18 0.02 260);
+  --color-foreground: oklch(0.97 0.01 260);
+  --color-panel: oklch(0.21 0.02 260 / 0.82);
+  --color-panel-border: oklch(1 0 0 / 0.12);
+  --color-muted: oklch(0.32 0.02 260);
+  --color-muted-foreground: oklch(0.78 0.02 260);
+  --color-primary: oklch(0.72 0.18 50);
+  --color-primary-foreground: oklch(0.18 0.02 260);
+  --color-secondary: oklch(0.36 0.03 260);
+  --color-secondary-foreground: oklch(0.97 0.01 260);
+  --color-destructive: oklch(0.63 0.22 27);
+  --color-warning: oklch(0.82 0.16 85);
+  --color-success: oklch(0.8 0.18 135);
+  --color-ring: oklch(0.72 0.18 50);
+
+  --color-fire-out-of-control: #ff0000;
+  --color-fire-being-held: #ffff00;
+  --color-fire-under-control: #98e600;
+  --color-fire-new: #fc921f;
+  --color-fire-unknown: #9ca3af;
+
+  --radius-panel: 0.75rem;
+}
+
+html,
+body,
+#root {
+  height: 100%;
+  margin: 0;
+}
+
+body {
+  background-color: var(--color-background);
+  color: var(--color-foreground);
+  font-family: var(--font-sans);
+  overscroll-behavior: none;
+  -webkit-font-smoothing: antialiased;
+}
