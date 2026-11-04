@@ -121,6 +121,9 @@ export default defineConfig([
     rules: {
       '@eslint-react/dom-no-dangerously-set-innerhtml': 'error',
       '@eslint-react/no-class-component': 'error',
+      'local/no-alloc-in-render-loop': 'error',
+      'local/redux-action-past-tense': 'error',
+      'local/require-dispose-in-on-remove': 'error',
       'react-hooks/exhaustive-deps': 'error',
       'react-hooks/rules-of-hooks': 'error',
     },

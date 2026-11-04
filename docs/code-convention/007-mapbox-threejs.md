@@ -27,7 +27,7 @@
 | Rule | What it checks |
 |---|---|
 | `local/no-alloc-in-render-loop` | the allocation ban inside the named functions/paths |
-| `local/require-dispose-in-on-remove` | any object literal with `onAdd` also has `onRemove` that calls `.dispose()` at least once |
+| `local/require-dispose-in-on-remove` | any object literal or class with `onAdd` also has `onRemove` that calls `.dispose()` (directly or via a `dispose*` function) at least once |
 | `@typescript-eslint/no-restricted-imports` | `three` and `mapbox-gl` only inside `widgets/map-view/**`, `entities/{drone,fire,terrain,map-camera}/api/**`, `shared/lib/geo/**` |
 | `no-restricted-syntax` | `new mapboxgl.Map(` or a value import of `Map` from `mapbox-gl` outside `widgets/map-view/**`; `Math.sin|cos|tan|asin|acos|atan|atan2(` outside `shared/lib/geo/**` and `entities/*/lib/**` |
 
