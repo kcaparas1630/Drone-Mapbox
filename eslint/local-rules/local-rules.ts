@@ -1,9 +1,11 @@
 // Local ESLint plugin holding the convention rules no published rule covers (conventions 001-013).
 import type { ESLint } from 'eslint';
 
+import { fetchThroughSharedApi } from './fetch-through-shared-api';
 import { filePurposeComment } from './file-purpose-comment';
 import { functionNameStartsWithVerb } from './function-name-starts-with-verb';
 import { noAllocInRenderLoop } from './no-alloc-in-render-loop';
+import { noCssFileOutsideApp } from './no-css-file-outside-app';
 import { noVagueFilename } from './no-vague-filename';
 import { noVagueIdentifier } from './no-vague-identifier';
 import { oneLineFunctionComment } from './one-line-function-comment';
@@ -13,9 +15,11 @@ import { relatedTypeExportsOnly } from './related-type-exports-only';
 import { requireDisposeInOnRemove } from './require-dispose-in-on-remove';
 
 const LOCAL_RULE_MODULES = {
+  'fetch-through-shared-api': fetchThroughSharedApi,
   'file-purpose-comment': filePurposeComment,
   'function-name-starts-with-verb': functionNameStartsWithVerb,
   'no-alloc-in-render-loop': noAllocInRenderLoop,
+  'no-css-file-outside-app': noCssFileOutsideApp,
   'no-vague-filename': noVagueFilename,
   'no-vague-identifier': noVagueIdentifier,
   'one-line-function-comment': oneLineFunctionComment,

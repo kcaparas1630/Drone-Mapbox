@@ -94,6 +94,7 @@ export default defineConfig([
       'import-x/no-default-export': 'error',
       'local/file-purpose-comment': 'error',
       'local/function-name-starts-with-verb': ['error', { allowedNames: ['cn', 'prerender'] }],
+      'local/no-css-file-outside-app': 'error',
       'local/no-vague-filename': 'error',
       'local/no-vague-identifier': 'error',
       'local/one-line-function-comment': 'error',
@@ -121,6 +122,7 @@ export default defineConfig([
     rules: {
       '@eslint-react/dom-no-dangerously-set-innerhtml': 'error',
       '@eslint-react/no-class-component': 'error',
+      'local/fetch-through-shared-api': 'error',
       'local/no-alloc-in-render-loop': 'error',
       'local/redux-action-past-tense': 'error',
       'local/require-dispose-in-on-remove': 'error',
