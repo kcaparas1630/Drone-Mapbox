@@ -1,0 +1,114 @@
+# Roadmap — step by step to the MVP
+
+Order is chosen to retire the riskiest unknowns first. Each phase ends with something runnable
+and a check that `bun run check` and the Stop hook pass. No phase starts code before the owner
+has approved the docs (ADR 018).
+
+## Phase 0 — Enforcement scaffold (no app code)
+
+Goal: the conventions are executable before any feature exists.
+
+1. `bun create vite` (react-ts), Bun lockfile, `.gitignore`, `.env.example`.
+2. `tsconfig` per convention 004; path alias `@/`.
+3. ESLint flat config: typescript-eslint strict-type-checked, react-hooks, boundaries (FSD map),
+   unicorn filename-case, import, vitest plugin; `eslint/local-rules/` with all ten rules and
+   their `RuleTester` tests; `eslint/approved-verbs.js`.
+4. Prettier + tailwind plugin; Vitest config with coverage thresholds scoped to pure paths.
+5. `scripts/`: `stop-hook.ts`, `format-touched-file.ts`, `check-tests-exist.ts`,
+   `count-todos.ts`, `count-eslint-disables.ts`, `check-no-secrets.ts`,
+   `check-hooks-configured.ts`.
+6. `.claude/settings.json` with the Stop and PostToolUse hooks; `simple-git-hooks` + commitlint.
+7. Empty FSD skeleton (`src/app … src/shared`) with `index.ts` files so boundaries can be tested.
+8. GitHub Actions `ci.yml` (bun + node 22, check, audit; e2e job added in Phase 6).
+
+**Done when:** `bun run check` passes on the skeleton; a deliberately bad file (vague name, missing
+comment, deep import) is rejected by the Stop hook with a readable message.
+
+## Phase 1 — Map on screen
+
+1. `shared/config/env.ts`, `bc-bounding-box.ts`; `widgets/map-view` creating the map (mercator,
+   terrain, Standard style, bounds, handlers off, `performanceMetricsCollection: false`).
+2. WebGL2 guard and context-lost overlay; `pages/map-page`; Tailwind + shadcn init; HUD shell.
+3. **Spike A:** confirm Standard style + `projection: 'mercator'` + terrain render together and
+   measure the frame cost.
+
+**Done when:** BC renders with terrain in dev and on a Vercel preview with the dev token.
+
+## Phase 2 — Drone in the world
+
+1. `entities/drone`: `SimWorld`, `stepFreeFlight`, snapshot bridge, persistence schema (unit
+   tests first).
+2. `drone-layer` custom layer with a primitive mesh; `shared/lib/geo` (mercator, bearing,
+   destination, scale); frame loop with fixed timestep.
+3. `features/control-drone` keyboard input with focus/blur rules; bounds soft clamp.
+4. **Spike B:** load the owner's GLB; set orientation/scale constants; check size (Draco if > 2 MB).
+
+**Done when:** the drone flies with WASD over terrain at 60 fps on the owner's laptop, position
+persists across reloads.
+
+## Phase 3 — Chase camera and terrain floor
+
+1. `entities/map-camera`: `computeChaseCamera` → `FreeCameraOptions`; orbit offset on drag; wheel
+   distance; reduced-motion.
+2. `entities/terrain`: null-safe `sampleTerrainElevation`, lookahead sampler, altitude rules
+   (floor) with unit tests covering the all-null case.
+3. HUD: speed, altitude MSL/AGL, heading, mode badge, edge-of-BC notice.
+4. **Spike C:** measure how often `queryTerrainElevation` returns null at 6 km lookahead during a
+   fast flight; tune lookahead distances.
+
+**Done when:** flying into a mountain lifts the drone; camera stays behind it; HUD numbers match.
+
+## Phase 4 — Search and auto-route
+
+1. `entities/route`: `planGeodesicRoute`, `advanceAlongRoute`, duration/easing (unit tests).
+2. `mode` slice with the state machine and guard tests; `features/fly-to-place`,
+   `features/pause-resume-route`; route banner; arrival card; recents in `prefs`.
+3. `widgets/search-bar` with `<SearchBox>` (BC filters, lazy session), zod on retrieve, toast
+   for outside-BC results.
+4. Terrain-following controller for auto-route; speed-scaled camera pull-back; route line layer.
+5. **Spike D:** verify Search Box billing behaviour (one session per focus→retrieve) in the
+   Mapbox dashboard after ten searches.
+
+**Done when:** "Summerland" flies the drone there over the mountains; WASD pauses; Resume
+re-plans; arrival card shows.
+
+## Phase 5 — Wildfires
+
+1. `entities/fire`: ArcGIS `fire.api.ts` (RTK Query, pagination, abort), `fire.schema.ts`
+   (rejects `{error}`), normaliser, selectors, status palette (tests with recorded fixtures).
+2. Hit-test circle layer + hover tooltip; `features/select-fire`; `widgets/fire-popup` with
+   allow-listed link and "Fly here".
+3. Beacon `InstancedMesh` in `drone-layer`, terrain-anchored, zoom-scaled, status-coloured, pulse
+   (disabled under reduced motion / low fps).
+4. Stale badge logic; offline banner; arrival card "fires within 25 km".
+
+**Done when:** today's active fires show as beacons, popup opens, "Fly here" works, feed outage
+shows stale badge without breaking anything.
+
+## Phase 6 — PWA, hardening, CI e2e, deploy
+
+1. `vite-plugin-pwa` manifest (`name: "FireflyBC"`, `short_name: "FireflyBC"`, `id: "/"`,
+   `start_url: "/"`, `display: "standalone"`) + precache; install button; update toast;
+   401 → reload prompt.
+2. `vercel.json` headers (report-only on preview → enforce); Vercel project `fireflybc` with
+   production domain `fireflybc.kcaparas.dev` (CNAME at the DNS provider for `kcaparas.dev`);
+   Vercel env tokens; Mapbox usage alert set.
+3. Playwright smoke suite with BCWS and Search Box route fixtures; SwiftShader flags; CI job.
+4. Low-end device fallbacks; 360 px layout pass; keyboard/a11y pass; bundle size check.
+5. Owner review against `docs/behaviour.md` edge-case tables.
+
+**Done when:** production deploy on `fireflybc.kcaparas.dev` passes every row in behaviour §10 that can
+be reproduced manually, Lighthouse PWA installable, CSP enforced with no console violations.
+
+## Definition of done for the MVP
+
+- All ADR decisions implemented as written or superseded by a new ADR.
+- `bun run check` and CI (incl. e2e) green; disable budget ≤ 10; TODO budget ≤ 20.
+- Every row of `docs/behaviour.md §10` has either a test or a manual verification note.
+- `docs/security.md` checklist satisfied; prod token restricted; dev token rotated at launch.
+- Owner can fly from Vancouver to Summerland, see the fires near Kelowna, open one, and reach BCWS.
+
+## Explicitly after MVP
+
+Offline tiers (ADR 006 options 1–3), fire perimeters, "show fires that are out" toggle if cut,
+gamepad, geolocation spawn, monitoring (ADR 017), proxy/cache for BCWS, multi-language.
