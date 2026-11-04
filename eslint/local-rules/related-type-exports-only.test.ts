@@ -24,6 +24,10 @@ ruleTester.run('related-type-exports-only', relatedTypeExportsOnly, {
     },
     { code: 'export type Result<T> = { value: T };', filename: 'src/shared/lib/result.ts' },
     {
+      code: "export function reportError() {}\nexport type ReportErrorSeverity = 'warn';",
+      filename: 'src/shared/lib/report-error.ts',
+    },
+    {
       code: 'export const droneModeSlice = 1;\nexport type DroneModeState = {};',
       filename: 'src/entities/drone/model/drone-mode.slice.ts',
     },
