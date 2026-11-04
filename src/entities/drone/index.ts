@@ -1,4 +1,6 @@
 // Public API of the drone entity: simulation state, physics, mode machine, snapshot and persistence.
+export { clampToBritishColumbia } from './lib/clamp-to-british-columbia';
+export { stepFreeFlight } from './lib/step-free-flight';
 export { createDroneInput } from './model/drone-input';
 export type { DroneInput } from './model/drone-input';
 export {
