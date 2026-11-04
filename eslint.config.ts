@@ -1,4 +1,4 @@
-// ESLint flat config: type-aware TypeScript rules, React rules, FSD boundaries and the convention rules of docs/code-convention.
+// ESLint flat config: type-aware TypeScript, React, FSD boundaries and the convention rules in docs/code-convention.
 import { fileURLToPath } from 'node:url';
 
 import eslintJs from '@eslint/js';
@@ -15,7 +15,7 @@ import tseslint from 'typescript-eslint';
 import { fsdBoundaries } from './eslint/config/fsd-boundaries';
 import { fsdPathOverrides } from './eslint/config/fsd-path-overrides';
 import { namingConventionOptions } from './eslint/config/naming-convention-options';
-import { localRules } from './eslint/local-rules';
+import { localRules } from './eslint/local-rules/local-rules';
 
 const REPO_ROOT = fileURLToPath(new URL('.', import.meta.url));
 
@@ -92,6 +92,9 @@ export default defineConfig([
         },
       ],
       'import-x/no-default-export': 'error',
+      'local/function-name-starts-with-verb': ['error', { allowedNames: ['cn', 'prerender'] }],
+      'local/no-vague-filename': 'error',
+      'local/no-vague-identifier': 'error',
       'max-classes-per-file': ['error', 1],
       'max-lines': ['error', { max: 200, skipBlankLines: true, skipComments: true }],
       'max-lines-per-function': ['error', { max: 60, skipBlankLines: true, skipComments: true }],

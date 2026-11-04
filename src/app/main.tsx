@@ -5,7 +5,7 @@ import { createRoot } from 'react-dom/client';
 import { App } from './app';
 
 // Finds the root element in index.html and renders the app inside StrictMode.
-function mountApp(): void {
+function renderApp(): void {
   const rootElement = document.getElementById('root');
   if (rootElement === null) {
     throw new Error('FireflyBC cannot start: the #root element is missing from index.html.');
@@ -17,4 +17,4 @@ function mountApp(): void {
   );
 }
 
-mountApp();
+renderApp();

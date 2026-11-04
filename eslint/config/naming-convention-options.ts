@@ -45,9 +45,10 @@ export const namingConventionOptions: Linter.RuleEntry = [
     selector: ['objectLiteralProperty', 'typeProperty', 'classProperty'],
     format: ['camelCase', 'PascalCase', 'UPPER_CASE'],
   },
-  { selector: ['objectLiteralMethod', 'typeMethod', 'classMethod'], format: ['camelCase'] },
+  { selector: ['typeMethod', 'classMethod'], format: ['camelCase'] },
+  { selector: 'objectLiteralMethod', format: ['camelCase', 'PascalCase'] },
   {
-    selector: ['objectLiteralProperty', 'typeProperty'],
+    selector: ['objectLiteralProperty', 'objectLiteralMethod', 'typeProperty'],
     modifiers: ['requiresQuotes'],
     format: null,
   },
