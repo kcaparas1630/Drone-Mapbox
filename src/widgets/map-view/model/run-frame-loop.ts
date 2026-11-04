@@ -5,6 +5,7 @@ import { FLIGHT_TUNING } from '@/shared/config';
 import type { FrameLoopContext } from './frame-loop-context';
 import { publishDroneSnapshot } from './publish-drone-snapshot';
 import { stepSimulation } from './step-simulation';
+import { updateChaseCamera } from './update-chase-camera';
 
 const SNAPSHOT_INTERVAL_MS = 250;
 const SAVE_INTERVAL_MS = 2000;
@@ -30,6 +31,9 @@ export function runFrameLoop(context: FrameLoopContext): () => void {
       stepSimulation(context, FIXED_STEP_S);
       accumulatorS -= FIXED_STEP_S;
     }
+    const state = context.store.getState();
+    const isArrived = state.droneMode.mode === 'arrived';
+    updateChaseCamera(context, frameS, state.cameraPrefs.followDistanceM, isArrived);
     context.map.triggerRepaint();
     if (nowMs - lastSnapshotMs >= SNAPSHOT_INTERVAL_MS) {
       lastSnapshotMs = nowMs;

@@ -3,6 +3,7 @@ import { clampToBritishColumbia, stepFreeFlight } from '@/entities/drone';
 import { sampleTerrainAhead } from '@/entities/terrain';
 import { readDroneInput } from '@/features/control-drone';
 
+import { applyTerrainFloor } from './apply-terrain-floor';
 import type { FrameLoopContext } from './frame-loop-context';
 import { updateTerrainState } from './update-terrain-state';
 
@@ -13,6 +14,7 @@ export function stepSimulation(context: FrameLoopContext, dtS: number): void {
   sampleTerrainAhead(map, world.lng, world.lat, world.headingRad, world.terrainSamplesM);
   updateTerrainState(world, dtS);
   stepFreeFlight(world, dtS);
+  applyTerrainFloor(world, dtS);
   clampToBritishColumbia(world);
   if (context.flags.isReducedMotion) {
     world.bankRad = 0;

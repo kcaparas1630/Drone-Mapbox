@@ -9,6 +9,7 @@ import { useAppStore } from '@/shared/lib/redux';
 
 import { createFrameLoopContext, type FrameLoopContext } from './frame-loop-context';
 import { publishDebugContext } from './publish-debug-context';
+import { registerCameraInput } from './register-camera-input';
 import { registerSimulationLifecycle } from './register-simulation-lifecycle';
 import { resetDroneLayer } from './reset-drone-layer';
 import { runFrameLoop } from './run-frame-loop';
@@ -43,9 +44,15 @@ export function useDroneSimulation(
     }
     resetDroneLayer(map, context);
     const unregisterLifecycle = registerSimulationLifecycle(map, context);
+    const unregisterCameraInput = registerCameraInput(
+      map.getCanvasContainer(),
+      context.orbit,
+      store,
+    );
     const stopLoop = runFrameLoop(context);
     return () => {
       stopLoop();
+      unregisterCameraInput();
       unregisterLifecycle();
       publishDebugContext(null);
       contextRef.current = null;
