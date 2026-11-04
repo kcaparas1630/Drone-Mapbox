@@ -47,7 +47,7 @@ What the app does, step by step, and what happens at every edge. Numbers marked 
 | A / ← , D / → | yaw left / right |
 | Space | climb |
 | Shift | descend |
-| Ctrl (hold) | boost ×4 |
+| Ctrl or E (hold) | boost ×4 (E is the safe choice with W: Chrome never lets a page intercept Ctrl+W, which closes the tab) |
 | Esc | cancel route / close popup / dismiss arrival |
 | / or Ctrl+K | focus search |
 | R | reset camera orbit offset |

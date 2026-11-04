@@ -7,6 +7,6 @@ export const DRONE_CONTROLS = {
   YAW_RIGHT: ['KeyD', 'ArrowRight'],
   CLIMB: ['Space'],
   DESCEND: ['ShiftLeft', 'ShiftRight'],
-  BOOST: ['ControlLeft', 'ControlRight'],
+  BOOST: ['ControlLeft', 'ControlRight', 'KeyE'],
   RESET_ORBIT: ['KeyR'],
 } as const;
