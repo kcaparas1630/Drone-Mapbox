@@ -1,5 +1,5 @@
 // Touch controls (coarse pointers only): left stick moves and turns, right stick climbs, boost button (§3.2).
-import { useRef } from 'react';
+import { useEffect, useRef } from 'react';
 
 import { droneInputStarted } from '@/entities/drone';
 import { setTouchDroneInput } from '@/features/control-drone';
@@ -9,10 +9,18 @@ import { Button } from '@/shared/ui';
 import type { StickVector } from '../lib/compute-stick-vector';
 import { TouchStick } from './touch-stick';
 
-// Renders the controls along the bottom edge; hidden on mouse/keyboard devices.
-export function Joystick() {
+export type JoystickProps = { isCompact?: boolean };
+
+// Renders the controls along the bottom edge; hidden on mouse/keyboard devices; only the controls take touches.
+export function Joystick({ isCompact = false }: JoystickProps) {
   const dispatch = useAppDispatch();
   const isActiveRef = useRef({ move: false, climb: false });
+  useEffect(
+    () => () => {
+      setTouchDroneInput({ forward: 0, yaw: 0, vertical: 0, isBoosting: false });
+    },
+    [],
+  );
   const reportActivity = (stick: 'move' | 'climb', isActive: boolean) => {
     if (isActive && !isActiveRef.current[stick]) {
       dispatch(droneInputStarted());
@@ -29,10 +37,10 @@ export function Joystick() {
   };
   return (
     <div className="hidden w-full items-end justify-between gap-4 pointer-coarse:flex">
-      <TouchStick label="Move and turn" shape="round" onChange={handleMove} />
+      <TouchStick label="Move and turn" shape="round" isCompact={isCompact} onChange={handleMove} />
       <Button
         variant="secondary"
-        className="mb-2 rounded-full select-none"
+        className="pointer-events-auto mb-2 rounded-full select-none"
         aria-label="Boost (hold)"
         onPointerDown={() => {
           setTouchDroneInput({ isBoosting: true });
@@ -49,7 +57,12 @@ export function Joystick() {
       >
         Boost
       </Button>
-      <TouchStick label="Climb and descend" shape="tall" onChange={handleClimb} />
+      <TouchStick
+        label="Climb and descend"
+        shape="tall"
+        isCompact={isCompact}
+        onChange={handleClimb}
+      />
     </div>
   );
 }
