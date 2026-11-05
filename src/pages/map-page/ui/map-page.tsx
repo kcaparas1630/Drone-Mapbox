@@ -2,6 +2,7 @@
 import { useReducer } from 'react';
 
 import { FirePopup } from '@/widgets/fire-popup';
+import { FlightHud } from '@/widgets/hud';
 import { INITIAL_MAP_STATUS, MapView, mergeMapStatus } from '@/widgets/map-view';
 import { RouteBanner } from '@/widgets/route-banner';
 import { SearchBar } from '@/widgets/search-bar';
@@ -23,9 +24,17 @@ export function MapPage({ mapboxToken, isDevBuild }: MapPageProps) {
         onStatusPatch={patchMapStatus}
       />
       <div className="pointer-events-none absolute inset-0 z-10 flex flex-col justify-between gap-2 p-2 sm:p-4">
-        <div className="flex items-start justify-center gap-2">
-          <div className="pointer-events-auto flex w-full justify-center">
-            <SearchBar mapboxToken={mapboxToken} />
+        <div className="flex flex-col gap-2">
+          <div className="flex flex-wrap items-start justify-between gap-2">
+            <div className="pointer-events-auto order-2 sm:order-1">
+              <FlightHud
+                isReducedDetail={mapStatus.isReducedDetail}
+                isTileStalled={mapStatus.isTileStalled}
+              />
+            </div>
+            <div className="pointer-events-auto order-1 flex w-full justify-center sm:order-2 sm:w-auto sm:flex-1">
+              <SearchBar mapboxToken={mapboxToken} />
+            </div>
           </div>
         </div>
         <div className="flex flex-col items-center gap-2 pb-8 sm:items-end sm:pb-6">
