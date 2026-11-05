@@ -2,7 +2,13 @@
 import { useReducer } from 'react';
 
 import { FirePopup } from '@/widgets/fire-popup';
-import { FireFeedBadge, FlightHud, OfflineBanner, PwaControls } from '@/widgets/hud';
+import {
+  FireFeedBadge,
+  FlightHud,
+  OfflineBanner,
+  OutFiresToggle,
+  PwaControls,
+} from '@/widgets/hud';
 import { Joystick } from '@/widgets/joystick';
 import { INITIAL_MAP_STATUS, MapView, mergeMapStatus } from '@/widgets/map-view';
 import { RouteBanner } from '@/widgets/route-banner';
@@ -41,6 +47,7 @@ export function MapPage({ mapboxToken, isDevBuild }: MapPageProps) {
             <div className="pointer-events-auto order-3">
               <div className="flex flex-col items-end gap-2">
                 <FireFeedBadge />
+                <OutFiresToggle />
                 <PwaControls />
               </div>
             </div>

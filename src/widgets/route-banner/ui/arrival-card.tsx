@@ -1,12 +1,10 @@
 // Arrival card: the destination and how many active fires are within 25 km, with the nearest (§6.5).
-import { findNearbyFires, useGetActiveFiresQuery } from '@/entities/fire';
+import { findNearbyFires, useFireFeedQuery } from '@/entities/fire';
 import type { Place } from '@/entities/route';
 import { FIRE_FEED } from '@/shared/config';
 import { Button, Card } from '@/shared/ui';
 
 export type ArrivalCardProps = { destination: Place; onDismiss: () => void };
-
-const FIRE_QUERY_ARGS = { isOutIncluded: false };
 
 // Returns the nearby-fires sentence, or a loading/unavailable note when the feed has no data.
 function describeNearbyFires(
@@ -33,7 +31,7 @@ function describeNearbyFires(
 
 // Renders the arrival summary and a Dismiss button.
 export function ArrivalCard({ destination, onDismiss }: ArrivalCardProps) {
-  const { data: feed } = useGetActiveFiresQuery(FIRE_QUERY_ARGS);
+  const { data: feed } = useFireFeedQuery();
   return (
     <Card role="status" aria-live="polite" className="flex w-full max-w-md flex-col gap-2 p-4">
       <p className="text-xs font-semibold tracking-wide text-muted-foreground uppercase">Arrived</p>

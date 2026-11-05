@@ -1,20 +1,19 @@
 // Fire feed badge: "Fires: N · updated 4 min ago", amber/red when stale, "unavailable" when failing (§7).
 import { Flame } from 'lucide-react';
 
-import { useGetActiveFiresQuery } from '@/entities/fire';
+import { useFireFeedQuery } from '@/entities/fire';
 import { useNow } from '@/shared/lib/browser';
 import { Badge } from '@/shared/ui';
 
 import { readFireFreshness } from '../lib/read-fire-freshness';
 
-const FIRE_QUERY_ARGS = { isOutIncluded: false };
 const MINUTE_MS = 60_000;
 const BADGE_TONES = { neutral: 'neutral', warning: 'warning', danger: 'danger' } as const;
 
 // Renders the badge from the shared feed cache, re-reading the age every minute.
 export function FireFeedBadge() {
   const nowMs = useNow(MINUTE_MS);
-  const { data: feed, isError } = useGetActiveFiresQuery(FIRE_QUERY_ARGS);
+  const { data: feed, isError } = useFireFeedQuery();
   const freshness = readFireFreshness({
     fireCount: feed?.fires.length ?? null,
     fetchedAtMs: feed?.fetchedAtMs ?? null,

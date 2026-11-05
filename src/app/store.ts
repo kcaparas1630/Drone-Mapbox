@@ -3,7 +3,7 @@ import { combineSlices, configureStore } from '@reduxjs/toolkit';
 import { setupListeners } from '@reduxjs/toolkit/query';
 
 import { droneModeSlice, droneSnapshotSlice } from '@/entities/drone';
-import { fireApi, selectedFireSlice } from '@/entities/fire';
+import { fireApi, fireFilterSlice, selectedFireSlice } from '@/entities/fire';
 import { cameraPrefsSlice } from '@/entities/map-camera';
 import { recentPlacesSlice, routeSlice } from '@/entities/route';
 
@@ -16,6 +16,7 @@ const rootReducer = combineSlices(
   recentPlacesSlice,
   cameraPrefsSlice,
   selectedFireSlice,
+  fireFilterSlice,
   fireApi,
 );
 

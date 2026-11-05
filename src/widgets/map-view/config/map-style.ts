@@ -1,5 +1,7 @@
 // The only place the map style and terrain source live, so offline or style options can swap them later (ADR 006).
 
+import { FIRE_FEED } from '@/shared/config';
+
 export const MAP_STYLE = {
   STYLE_URL: 'mapbox://styles/mapbox/standard',
   DEM_SOURCE_ID: 'mapbox-dem',
@@ -8,7 +10,7 @@ export const MAP_STYLE = {
   ROUTE_LAYER_ID: 'route-line',
   FIRE_SOURCE_ID: 'fires',
   FIRE_LAYER_ID: 'fire-points',
-  FIRE_BEACON_CAPACITY: 2000,
+  FIRE_BEACON_CAPACITY: FIRE_FEED.PAGE_SIZE * FIRE_FEED.MAX_PAGES,
   BEACON_UPDATE_INTERVAL_MS: 250,
   DEM_URL: 'mapbox://mapbox.mapbox-terrain-dem-v1',
   DEM_TILE_SIZE: 512,
