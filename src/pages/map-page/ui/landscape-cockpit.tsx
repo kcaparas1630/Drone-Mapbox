@@ -1,4 +1,4 @@
-// Phone landscape cockpit: the desktop layout at a smaller size, with the touch sticks along the bottom (§4.2).
+// Phone landscape cockpit: brand, search and fires on top; one bottom bar of sticks and instruments (§4.2).
 import { useState } from 'react';
 
 import { selectSelectedFireNumber } from '@/entities/fire';
@@ -56,15 +56,14 @@ export function LandscapeCockpit({ mapboxToken, mapStatus }: LandscapeCockpitPro
             <OfflineBanner />
           </div>
         </div>
-        <div className="flex min-h-0 flex-1 items-end justify-between gap-2">
-          <div className="pointer-events-auto shrink-0">
-            <NavCluster mapboxToken={mapboxToken} variant="compact" />
-          </div>
-          <div className="pointer-events-auto flex min-w-0 flex-1 justify-center">
+        <div className="flex min-h-0 flex-1 items-end justify-center">
+          <div className="pointer-events-auto min-w-0">
             <RouteBanner />
           </div>
         </div>
-        <Joystick isCompact />
+        <Joystick isCompact>
+          <NavCluster mapboxToken={mapboxToken} variant="compact" />
+        </Joystick>
       </div>
     </div>
   );
