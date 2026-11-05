@@ -33,17 +33,20 @@ test('collapses the cockpit in portrait, and in landscape frees the fire column 
   await expect(page.getByRole('combobox')).toBeFocused();
 
   await page.setViewportSize(LANDSCAPE);
-  const climbStick = page.getByLabel('Climb and descend');
+  await expect(page.getByLabel('Flight data')).toBeVisible();
+  await expect(notice).toHaveCount(0);
   await expect(firePanelToggle).toHaveAttribute('aria-expanded', 'false');
   await expect(page.getByRole('combobox')).toBeVisible();
   await expect(page.getByLabel('Move and turn')).toBeVisible();
-  await expect(notice).toHaveCount(0);
-  await expect(climbStick).toBeVisible();
-  const collapsedStickRightPx = await readRightEdgePx(climbStick);
-  expect(collapsedStickRightPx).toBeGreaterThan(LANDSCAPE.width - 40);
+  const climbStick = page.getByLabel('Climb and descend');
+  const compass = page.getByRole('figure', { name: 'Compass' });
+  await expect.poll(() => readRightEdgePx(climbStick)).toBeGreaterThan(LANDSCAPE.width - 40);
+  await expect
+    .poll(async () => (await compass.boundingBox())?.y ?? 0)
+    .toBeGreaterThan(LANDSCAPE.height / 2);
 
   await firePanelToggle.click();
   await expect(firePanelToggle).toHaveAttribute('aria-expanded', 'true');
   await expect(page.getByText(/Fires: 22/)).toBeVisible();
-  expect(await readRightEdgePx(climbStick)).toBeLessThan(collapsedStickRightPx - 200);
+  await expect.poll(() => readRightEdgePx(climbStick)).toBeLessThan(LANDSCAPE.width - 240);
 });
