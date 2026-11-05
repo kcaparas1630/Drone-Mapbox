@@ -17,14 +17,16 @@ import { OutFiresToggle } from './out-fires-toggle';
 
 const WIDE_SCREEN_QUERY = '(min-width: 640px)';
 
-// Returns whether the panel starts open: yes on wide screens, collapsed on phones.
+// Returns whether the panel starts open on its own: yes on wide screens, collapsed on narrow ones.
 function readIsInitiallyOpen(): boolean {
   return typeof window.matchMedia !== 'function' || window.matchMedia(WIDE_SCREEN_QUERY).matches;
 }
 
+export type FirePanelProps = { isOpenByDefault?: boolean; isCompact?: boolean };
+
 // Renders the collapsible panel from the shared feed cache and the ≤ 4 Hz drone snapshot.
-export function FirePanel() {
-  const [isOpen, setIsOpen] = useState(readIsInitiallyOpen);
+export function FirePanel({ isOpenByDefault, isCompact = false }: FirePanelProps) {
+  const [isOpen, setIsOpen] = useState(() => isOpenByDefault ?? readIsInitiallyOpen());
   const snapshot = useAppSelector(selectDroneSnapshot);
   const { data: feed } = useFireFeedQuery();
   const sorted = useMemo(() => sortFiresByDistance(feed?.fires ?? [], snapshot), [feed, snapshot]);
@@ -36,7 +38,10 @@ export function FirePanel() {
   return (
     <section
       aria-label="Active fires"
-      className="flex max-h-full min-h-0 w-full shrink flex-col overflow-hidden rounded-panel border border-panel-border bg-panel shadow-xl backdrop-blur-md sm:w-80"
+      className={cn(
+        'flex max-h-full min-h-0 w-full shrink flex-col overflow-hidden rounded-panel border border-panel-border bg-panel shadow-xl backdrop-blur-md',
+        isCompact ? '' : 'sm:w-80',
+      )}
     >
       <button
         type="button"
@@ -59,7 +64,10 @@ export function FirePanel() {
       <div
         id="fire-panel-body"
         hidden={!isOpen}
-        className="flex min-h-0 flex-1 flex-col gap-2.5 border-t border-panel-border px-3 pt-2.5 pb-3"
+        className={cn(
+          'flex min-h-0 flex-1 flex-col border-t border-panel-border',
+          isCompact ? 'gap-2 px-2 pt-2 pb-2' : 'gap-2.5 px-3 pt-2.5 pb-3',
+        )}
       >
         <FireFeedBadge />
         <FireStatusChips filters={chips} selectedId={filterId} onSelect={setFilterId} />
