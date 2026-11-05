@@ -45,7 +45,7 @@ What the app does, step by step, and what happens at every edge. Numbers marked 
 | W / ↑ | thrust forward |
 | S / ↓ | brake, then reverse at half thrust |
 | A / ← , D / → | yaw left / right |
-| Space | climb |
+| Space | climb (except while keyboard navigating: after Tab and before any click or tap, Space presses the focused button or checkbox instead) |
 | Shift | descend |
 | Ctrl or E (hold) | boost ×4 (E is the safe choice with W: Chrome never lets a page intercept Ctrl+W, which closes the tab) |
 | Esc | cancel route / close popup / dismiss arrival |

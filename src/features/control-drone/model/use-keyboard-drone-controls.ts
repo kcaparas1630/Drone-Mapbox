@@ -5,6 +5,7 @@ import { droneInputStarted } from '@/entities/drone';
 import { DRONE_CONTROLS } from '@/shared/config';
 import { useAppDispatch } from '@/shared/lib/redux';
 
+import { isSpaceActivatedControl } from '../lib/is-space-activated-control';
 import { isTypingTarget } from '../lib/is-typing-target';
 import { droneInputSource } from './drone-input-source';
 import { clearDroneInput } from './clear-drone-input';
@@ -20,12 +21,17 @@ const MOVEMENT_CODES: ReadonlySet<string> = new Set([
 const BOOST_CODES: ReadonlySet<string> = new Set(DRONE_CONTROLS.BOOST);
 const RESET_ORBIT_CODES: ReadonlySet<string> = new Set(DRONE_CONTROLS.RESET_ORBIT);
 
-// Returns true when the key event belongs to someone else: typing, or a browser/app shortcut like Ctrl+K.
-function isForeignKeyEvent(event: KeyboardEvent): boolean {
+// Returns true when the key belongs to someone else: typing, a shortcut like Ctrl+K, or Space on a tabbed-to control.
+function isForeignKeyEvent(event: KeyboardEvent, isKeyboardNavigating: boolean): boolean {
   const isDroneCode = BOOST_CODES.has(event.code) || MOVEMENT_CODES.has(event.code);
   const isModifiedShortcut = event.metaKey || event.altKey || (event.ctrlKey && !isDroneCode);
+  const isControlPress =
+    isKeyboardNavigating && event.code === 'Space' && isSpaceActivatedControl(event.target);
   return (
-    isModifiedShortcut || isTypingTarget(event.target) || isTypingTarget(document.activeElement)
+    isModifiedShortcut ||
+    isControlPress ||
+    isTypingTarget(event.target) ||
+    isTypingTarget(document.activeElement)
   );
 }
 
@@ -33,8 +39,12 @@ function isForeignKeyEvent(event: KeyboardEvent): boolean {
 export function useKeyboardDroneControls(): void {
   const dispatch = useAppDispatch();
   useEffect(() => {
+    let isKeyboardNavigating = false;
     const handleKeyDown = (event: KeyboardEvent) => {
-      if (isForeignKeyEvent(event)) {
+      if (event.code === 'Tab') {
+        isKeyboardNavigating = true;
+      }
+      if (isForeignKeyEvent(event, isKeyboardNavigating)) {
         return;
       }
       if (RESET_ORBIT_CODES.has(event.code)) {
@@ -52,7 +62,12 @@ export function useKeyboardDroneControls(): void {
       droneInputSource.pressedCodes.add(event.code);
     };
     const handleKeyUp = (event: KeyboardEvent) => {
-      droneInputSource.pressedCodes.delete(event.code);
+      if (droneInputSource.pressedCodes.delete(event.code)) {
+        event.preventDefault();
+      }
+    };
+    const handlePointerDown = () => {
+      isKeyboardNavigating = false;
     };
     const handleVisibilityChange = () => {
       if (document.visibilityState === 'hidden') {
@@ -61,11 +76,13 @@ export function useKeyboardDroneControls(): void {
     };
     window.addEventListener('keydown', handleKeyDown);
     window.addEventListener('keyup', handleKeyUp);
+    window.addEventListener('pointerdown', handlePointerDown, true);
     window.addEventListener('blur', clearDroneInput);
     document.addEventListener('visibilitychange', handleVisibilityChange);
     return () => {
       window.removeEventListener('keydown', handleKeyDown);
       window.removeEventListener('keyup', handleKeyUp);
+      window.removeEventListener('pointerdown', handlePointerDown, true);
       window.removeEventListener('blur', clearDroneInput);
       document.removeEventListener('visibilitychange', handleVisibilityChange);
       clearDroneInput();
