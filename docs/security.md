@@ -12,6 +12,7 @@ pipeline.
 | Dev token leaked (repo, CI logs, screenshots) | Our bill | `.env.local` git-ignored; `check-no-secrets` pre-commit; CI secret masked; rotate quarterly |
 | Malicious or malformed BCWS feed content | XSS, crash | zod at boundary, React text rendering only, no `setHTML`, URL host allowlist |
 | Malicious Search Box response | XSS | zod on retrieve, text rendering |
+| Malicious reverse-geocode response or DEM tile | XSS, wrong altitude | zod on the geocode body, text rendering; DEM image size checked and every decoded height range-checked (ADR 021, 022) |
 | Clickjacking / framing | Phishing overlay | `frame-ancestors 'none'`, `X-Frame-Options: DENY` |
 | Supply-chain compromise of a dependency | Everything | Lockfile + `--frozen-lockfile`, `bun audit` in CI, Dependabot weekly, no `postinstall` without review, dependency justification rule |
 | Stale service worker serving an old bundle | Broken app after token rotation | `autoUpdate`, reload prompt on 401 |
@@ -84,6 +85,13 @@ Why each unusual line:
   status mapped to our union with a fallback, coordinates checked against the BC bbox, `FIRE_URL`
   parsed with `new URL()` and host compared to `wildfiresituation.nrs.gov.bc.ca`.
 - Search Box: retrieve feature schema; coordinates inside BC.
+- BCWS perimeters: `FeatureCollection` of `Polygon`/`MultiPolygon` with `FIRE_NUMBER`,
+  `FIRE_SIZE_HECTARES`, `FIRE_STATUS`; rings outside the BC bbox (+1°) dropped; numbers only.
+- Reverse geocode (`/search/geocode/v6/reverse`): feature collection schema; only `name` and
+  `place_formatted` text is shown, as React text.
+- DEM tiles (`/v4/mapbox.mapbox-terrain-dem-v1/{z}/{x}/{y}.pngraw`): `fetchImageBitmap` checks
+  status, `content-type: image/*`, size ≤ 2 MB and 10 s timeout; the bitmap must be square
+  (256 or 512 px); decoded heights outside −500…9000 m are treated as missing.
 - `localStorage`: versioned schema; anything failing is discarded.
 - Rendering: React text nodes only; `react/no-danger` lint; Mapbox `Popup` is not used.
 - External links: `target="_blank" rel="noopener noreferrer"`.
@@ -119,6 +127,10 @@ Why each unusual line:
 - Search Box: a session opens only on first keystroke after focus; input debounced 300 ms, min 2
   characters; the SDK closes sessions on retrieve.
 - Fire feed: poll every 10 min (upstream cache is 5 min); in-flight requests aborted on unmount.
+- Reverse geocode: at most one request per ~2 km grid cell per session (cached in memory),
+  never while hovering; a failed cell is not retried for 60 s.
+- DEM tiles: only when a route is planned, ≤ 12 tiles per route, cached in memory per tile.
+- Fire perimeters: one request per fire-feed poll (10 min), simplified server-side, ≤ 2 MB.
 - Mapbox: owner sets a usage alert at the free-tier boundary in the Mapbox dashboard.
 - Vercel: default DDoS protection; no functions to abuse.
 

@@ -12,8 +12,8 @@ What the app does, step by step, and what happens at every edge. Numbers marked 
 3. Saved drone state is read from `localStorage` (`fireflybc.drone.v1`). Valid and inside BC → use it;
    otherwise `BC_CENTRE` (Prince George area, *(tunable)*), heading north, altitude
    `DEFAULT_ALT_AGL_M` above terrain *(tunable, 500 m)*.
-4. Map is created: Standard style, `projection: 'mercator'`, terrain on (`mapbox-dem`),
-   `maxBounds` = BC bbox + 1° padding, Mapbox interaction handlers off, `minZoom` 4.
+4. Map is created: Standard Satellite style (ADR 021), `projection: 'mercator'`, terrain on (`mapbox-dem`),
+   no `maxBounds` (ADR 020), Mapbox interaction handlers off, `minZoom` 4.
 5. Custom layer `drone-layer` is added on `style.load`; the drone GLB is loaded (a wireframe
    placeholder shows until it arrives). Mode = `idle`.
 6. Fire feed fetch starts in parallel (RTK Query). HUD shows "Loading fires…".
@@ -76,14 +76,37 @@ the map = orbit, pinch = follow distance.
 
 A soft clamp: within 5 km of the BC bbox edge the outward velocity component is scaled down to
 zero at the edge; the drone never leaves the bbox. The HUD shows "Edge of British Columbia" while
-clamped. `maxBounds` on the map prevents the camera from showing much beyond it.
+clamped. The chase camera stays within a few kilometres of the drone, so the view stays over BC.
+The map has no `maxBounds`: with terrain it moves the camera off its pose and makes it bounce
+(ADR 020).
 
 ## 4. Chase camera (ADR 014)
 
 Each frame: camera position = drone position − forward × `FOLLOW_DISTANCE_M` (60 m, scaled by
-`1 + speed/maxSpeed`) + up × `FOLLOW_HEIGHT_M` (25 m); `lookAtPoint(drone)`. Applied with
+`1 + speed/maxSpeed`) + up × `FOLLOW_HEIGHT_M` (25 m); `lookAtPoint(drone + forward × LOOK_AHEAD_M)`
+(40 m, scaled the same way). Aiming just ahead keeps the horizon in view and the drone a little
+below centre, so fires tens of kilometres ahead stay on screen (ADR 023). Applied with
 `map.setFreeCameraOptions`. Orbit offset from drag is added to the forward vector before placement.
 `prefers-reduced-motion` disables orbit easing and bank animation.
+
+### 4.1 Cockpit layout (ADR 021)
+
+- **Top left:** FireflyBC wordmark, mode badge ("Ready", "Free flight", …), HUD notes.
+- **Top centre:** search. **Right:** fire panel (§7.1) with the selected fire's details card
+  under it. **Bottom centre:** route banner.
+- **Lower left, nav cluster:**
+  - Compass rose, heading-up: the ring turns so the drone's heading is at the top, with N (red),
+    E, S, W and 30° ticks. A fixed lubber line marks the heading, and the heading in degrees
+    plus its compass point ("312° NW") sits under the rose.
+  - Fire blips: a dot in the status colour on the ring at the bearing of each fire within
+    150 km, bigger when closer.
+  - Location: "Near {place}, {region}" from a Mapbox reverse geocode, looked up when the drone
+    enters a new ~2 km cell. A cell is never looked up twice per session, so hovering costs
+    nothing. It shows "Over British Columbia" while the first lookup runs or when it fails, and
+    the coordinates (5 decimals, N/W) underneath.
+  - Telemetry: speed (km/h), vertical speed (m/s, ▲/▼), altitude MSL and AGL.
+- On screens under 640 px wide, the nav cluster shows only the compass and the place name, and
+  the fire panel collapses to a "Fires (N)" button.
 
 ## 5. Search → fly (ADR 008)
 
@@ -100,21 +123,43 @@ Each frame: camera position = drone position − forward × `FOLLOW_DISTANCE_M` 
 
 ### 6.1 Path and speed
 
-- Path: great-circle from current position to destination. Progress is a distance along the path.
+- Path: a planned polyline (≤ 256 points) from the current position to the destination. It starts
+  as the great circle. Within a second the map widget replaces it with a terrain-aware curve
+  (§6.2), as long as less than 20 % of the trip time has passed; otherwise the great circle stays.
+  Progress is a distance along the polyline, and the route line draws the same polyline.
 - Trip duration = `clamp(distance / CRUISE_MPS, MIN_TRIP_S, MAX_TRIP_S)` *(tunable: 400 m/s,
   5 s, 45 s)* with ease-in/ease-out, so Vancouver → Summerland (~300 km) takes ~45 s and the
   camera pulls back proportionally to speed so the ground is readable.
-- Heading turns toward the path bearing at up to 180°/s at the start (visible banking turn),
-  then follows the great-circle bearing, which changes along the way.
+- Heading turns toward the path bearing at up to 180°/s with a visible bank. The bearing is taken
+  toward a point slightly ahead on the polyline, so curves are flown as smooth banked turns.
 
-### 6.2 Terrain-following altitude (ADR 007)
+### 6.2 Planned path and altitude profile (ADR 022, amends ADR 007)
+
+Planning, in the map widget, when a route has no terrain-aware path yet:
 
 ```
-samples = terrain at 0 km, 1 km, 3 km, 6 km ahead along current heading (null-safe)
-target  = max(known samples) + CLEARANCE_M (300 m)       -- never below the previous target
-         + speedFactor × 500 m                           -- higher when faster, for visibility
-altMsl  = approach target with max vertical rate 120 m/s, eased
+corridor = route bbox + max lateral offset; DEM tiles (terrain-RGB) at the coarsest zoom ≤ 10
+           that covers it in ≤ 12 tiles
+candidates = quadratic Bézier curves origin → destination with the apex offset sideways by
+             0, ±15 %, ±30 %, ±45 % of the distance (offset ≤ 40 km), sampled every ~1 km
+score    = highest terrain on the curve + 0.05 × (curve length − straight length)
+           -- a 1 km detour must avoid 50 m of terrain; the straight line wins ties
+profile  = need(s) = highest terrain within ±1.5 km + CLEARANCE_M (300 m)
+           envelope(s) = min(start + 25 % × s, cruise, end + 15 % × (L − s))
+           cruise = max(start, end) + min(1500 m, 2 % × L);  end = destination ground + 300 m
+           alt(s) = max(envelope, need) with climbs pulled ahead of ridges (25 % grade) and
+           descents eased after them (15 % grade), then smoothed; ≤ CEILING_MSL_M
 ```
+
+In flight, each step:
+
+```
+target = max(profile(s), max(known samples 0/1/3/6 km ahead) + CLEARANCE_M)  -- live safety net
+altMsl = approach target, vertical rate ≤ max(120 m/s, 1.5 × profile slope × ground speed)
+```
+
+Without DEM tiles (offline, error or timeout after 10 s) the path stays the great circle and the
+profile is the envelope with `end = start`; the live safety net still applies.
 
 ### 6.3 Null terrain samples
 
@@ -128,7 +173,10 @@ readout shows "—" for AGL while samples are missing.
 - Any drone input while in `autoRoute` → `paused` immediately. The drone keeps its velocity and
   responds to input; the route line stays drawn faded.
 - Banner: "Paused — Resume flight to Summerland? [Resume] [Cancel]". Resume re-plans from the
-  current position with the same destination (fresh duration). Cancel clears the route.
+  current position with the same destination (fresh duration and a fresh terrain-aware path).
+  Cancel clears the route.
+- While flying, the banner shows the destination, the distance left and the time left
+  ("Flying to Summerland · 182 km · 0:31").
 - Pausing does not change the camera model.
 
 ### 6.5 Arrival
@@ -142,16 +190,44 @@ status)". Any input or Dismiss → `freeFlight`.
 - Fetch on launch, poll every 10 min, refetch on reconnect; 10 s timeout; paginated.
 - HUD badge: "Fires: N · updated 4 min ago" (relative time ticks each minute). Over 30 min old
   (feed failing) → amber "Fire data may be stale"; over 2 h → red; never silently blank.
-- Representation: hit-test circle layer + 3D beacons (status palette in ADR 015). Beacon height
-  scales with `CURRENT_SIZE` (log scale, clamped) and with zoom so distant fires remain visible.
-- Hover (desktop) → cursor pointer + tooltip with name and status. Click/tap → popup card:
+- Representation (ADR 023): a hit-test circle layer with the incident name as a haloed label.
+  Under it is a scorched footprint draped on the terrain: the BCWS perimeter polygon when one
+  exists, else a circle of the reported area (`r = √(ha × 10 000 / π)`, at least 60 m),
+  marked "approximate area" in the popup. The footprint has a charred fill and an edge in the
+  status colour. Floating over it is the `fire.glb` flame, scaled by status: out of control,
+  new and Fire of Note 100 %, being held 60 %, under control 35 %, out none. The flame flickers
+  unless motion is reduced. Its base height grows with fire size, and it never draws smaller than
+  ~32 px tall, so fires stay visible and clickable from tens of kilometres away. A translucent
+  ghost of each flame is drawn through the terrain, so a fire behind a ridge is still seen and
+  clicked; where the fire is in view, the solid flame covers its ghost.
+- Perimeters: fetched with the fire feed and polled every 10 min (`FIRE_STATUS<>'Out'`, simplified
+  to ~50 m, ≤ 1000 features). A failed perimeter fetch only falls back to circles; it never
+  hides fires.
+- Hover (desktop) → cursor pointer + tooltip with name and status. Click/tap on the point or the
+  flame **selects** the fire (never flies): its list row scrolls into view and is highlighted, and
+  the details card opens under the fire list:
   fire number, incident name, status badge, size (ha), ignition date (local time), approximate
   location, cause, "Fly here" button, "Open on BC Wildfire Service ↗" (allow-listed host only).
 - "Fly here" dispatches `flyToPlace` to the fire's coordinates.
 - Filter: `Out` fires excluded by default; a HUD toggle "Show fires that are out" re-queries
-  without the filter (post-MVP if time is short; the toggle is the only planned filter).
+  without the filter.
 - Disclaimer in the popup footer: "Informational only. Source: BC Wildfire Service open data,
   fetched {time}. For emergencies follow EmergencyInfoBC."
+
+### 7.1 Fire panel (ADR 021)
+
+- A panel on the right: the feed badge, status chips (All · Out of control · Being held ·
+  Under control · New, each with its count), the fire list, and the "Show fires that are out"
+  toggle.
+- Rows are sorted by distance from the drone (re-sorted on each ≤ 4 Hz snapshot). Each row
+  shows the status swatch, the incident name, the size, the distance ("12.4 km"), and an arrow
+  pointing to the fire relative to the drone's heading (up = straight ahead).
+- Clicking a row selects the fire, the same as clicking its point or flame: the row highlights
+  and the details card opens under the list. "Fly here" on the card, or the row's Fly button,
+  dispatches `flyToPlace`. A fire selected on the map scrolls its row into view; if the active
+  status chip hides it, the chip resets to All.
+- Before the first snapshot, rows are sorted by name and show no distance. An empty filter
+  shows "No fires match this filter".
 
 ## 8. Persistence
 
