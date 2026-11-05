@@ -1,0 +1,75 @@
+// The only page: the full-screen map with the cockpit widgets layered on top (behaviour §4.1).
+import { useReducer } from 'react';
+
+import { FirePanel } from '@/widgets/fire-panel';
+import { FirePopup } from '@/widgets/fire-popup';
+import { FlightHud, NavCluster, OfflineBanner, PwaControls } from '@/widgets/hud';
+import { Joystick } from '@/widgets/joystick';
+import { INITIAL_MAP_STATUS, MapView, mergeMapStatus } from '@/widgets/map-view';
+import { RouteBanner } from '@/widgets/route-banner';
+import { SearchBar } from '@/widgets/search-bar';
+
+import { useEscapeShortcut } from '../model/use-escape-shortcut';
+import { useReloadOnAuthFailure } from '../model/use-reload-on-auth-failure';
+
+export type MapPageProps = { mapboxToken: string; isDevBuild: boolean };
+
+// Renders the map page: map underneath, a soft edge vignette, widgets in a click-through overlay.
+export function MapPage({ mapboxToken, isDevBuild }: MapPageProps) {
+  const [mapStatus, patchMapStatus] = useReducer(mergeMapStatus, INITIAL_MAP_STATUS);
+  useEscapeShortcut();
+  useReloadOnAuthFailure(mapStatus.isAuthFailed);
+  return (
+    <main className="relative h-dvh w-full overflow-hidden" aria-label="FireflyBC map">
+      <MapView
+        mapboxToken={mapboxToken}
+        isDevBuild={isDevBuild}
+        status={mapStatus}
+        onStatusPatch={patchMapStatus}
+      />
+      <div
+        aria-hidden="true"
+        className="pointer-events-none absolute inset-0 z-[5] bg-[radial-gradient(ellipse_at_center,transparent_55%,rgb(0_0_0/0.35))]"
+      />
+      <div className="pointer-events-none absolute inset-0 z-10 flex flex-col gap-2 p-2 sm:p-4">
+        <div className="flex flex-wrap items-start gap-2">
+          <div className="pointer-events-auto order-2 sm:order-1">
+            <FlightHud
+              isReducedDetail={mapStatus.isReducedDetail}
+              isTileStalled={mapStatus.isTileStalled}
+            />
+          </div>
+          <div className="pointer-events-auto order-1 flex w-full justify-center sm:order-2 sm:w-auto sm:flex-1">
+            <SearchBar mapboxToken={mapboxToken} />
+          </div>
+          <div className="pointer-events-auto order-3 ml-auto flex justify-end sm:w-80">
+            <PwaControls />
+          </div>
+        </div>
+        <div className="flex justify-center">
+          <div className="pointer-events-auto">
+            <OfflineBanner />
+          </div>
+        </div>
+        <div className="flex min-h-0 flex-1 justify-end">
+          <div className="pointer-events-auto flex max-h-full w-full flex-col items-end gap-2 sm:w-80">
+            <FirePanel />
+            <FirePopup />
+          </div>
+        </div>
+        <div className="flex flex-col gap-2 sm:flex-row sm:items-end sm:justify-between">
+          <div className="pointer-events-auto sm:mb-5">
+            <NavCluster mapboxToken={mapboxToken} />
+          </div>
+          <div className="pointer-events-auto flex flex-1 justify-center">
+            <RouteBanner />
+          </div>
+          <div className="hidden sm:block sm:w-80" />
+        </div>
+        <div className="pointer-events-auto w-full">
+          <Joystick />
+        </div>
+      </div>
+    </main>
+  );
+}

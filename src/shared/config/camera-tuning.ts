@@ -1,0 +1,19 @@
+// Chase camera distances, orbit limits and easing from docs/behaviour.md §3.1, §4 and §6.5 (ADR 014).
+
+const DEG_TO_RAD = Math.PI / 180;
+
+export const CAMERA_TUNING = {
+  FOLLOW_DISTANCE_M: 60,
+  FOLLOW_HEIGHT_M: 25,
+  LOOK_AHEAD_M: 40,
+  MIN_FOLLOW_DISTANCE_M: 30,
+  MAX_FOLLOW_DISTANCE_M: 400,
+  WHEEL_ZOOM_STEP: 1.15,
+  ORBIT_YAW_LIMIT_RAD: 90 * DEG_TO_RAD,
+  MIN_MAPBOX_PITCH_RAD: 30 * DEG_TO_RAD,
+  MAX_MAPBOX_PITCH_RAD: 75 * DEG_TO_RAD,
+  ORBIT_RAD_PER_PIXEL: 0.005,
+  ORBIT_EASE_BACK_S: 1.5,
+  ARRIVAL_ORBIT_RAD_PER_S: 10 * DEG_TO_RAD,
+  MIN_CAMERA_AGL_M: 5,
+} as const;

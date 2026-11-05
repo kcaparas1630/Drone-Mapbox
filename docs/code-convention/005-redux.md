@@ -19,7 +19,7 @@
 
 | Rule | What it checks |
 |---|---|
-| `no-restricted-imports` | `useSelector`, `useDispatch`, `useStore` from `react-redux` outside `shared/lib/redux`; `redux` core package |
+| `@typescript-eslint/no-restricted-imports` | `useSelector`, `useDispatch`, `useStore` from `react-redux` outside `shared/lib/redux`; `redux` core package |
 | `no-restricted-syntax` | `store.subscribe(` outside `src/app/**`; `createStore(` anywhere |
 | `local/redux-action-past-tense` | reducer names in `createSlice` end with `ed`/`en`/`t` past-tense suffix or are on the allowlist (`reset`, `clear` are not allowed — use `routeCleared`) |
 | RTK serialisability + immutability middleware (dev/test) | throws on non-serialisable state or mutation |

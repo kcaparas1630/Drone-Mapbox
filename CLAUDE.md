@@ -68,7 +68,7 @@ src/widgets    map-view (map + custom layer + loop), hud, search-bar, fire-popup
 src/features   control-drone, fly-to-place, pause-resume-route, select-fire
 src/entities   drone, route, fire, terrain, map-camera
 src/shared     config, lib (geo, redux, result, storage), api, ui (shadcn), types
-eslint/        local-rules/ + approved-verbs.js
+eslint/        local-rules/ + approved-verbs.ts + config/ (shared ESLint option builders)
 scripts/       stop-hook, format-touched-file, check-* convention scripts
 ```
 

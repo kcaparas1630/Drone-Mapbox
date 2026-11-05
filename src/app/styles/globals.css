@@ -1,0 +1,48 @@
+/* Global stylesheet: Tailwind v4, animation utilities and the Canopy overlay tokens (convention 009, ADR 023). */
+@import 'tailwindcss';
+@import 'tw-animate-css';
+
+@theme {
+  --font-sans:
+    ui-sans-serif, system-ui, -apple-system, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+
+  --color-background: #0f1a14;
+  --color-foreground: #f8fafc;
+  --color-panel: rgb(28 43 34 / 0.94);
+  --color-panel-solid: #1c2b22;
+  --color-panel-border: #3a5243;
+  --color-muted: #24382b;
+  --color-muted-foreground: #a9bcae;
+  --color-primary: #f59e0b;
+  --color-primary-foreground: #171a1f;
+  --color-secondary: #24382b;
+  --color-secondary-foreground: #d7e2d9;
+  --color-destructive: #ef4444;
+  --color-warning: #fbbf24;
+  --color-success: #4ade80;
+  --color-ring: #f59e0b;
+  --color-status-ring: #16241b;
+
+  --color-fire-out-of-control: #ff0000;
+  --color-fire-being-held: #ffff00;
+  --color-fire-under-control: #98e600;
+  --color-fire-new: #fc921f;
+  --color-fire-unknown: #9ca3af;
+
+  --radius-panel: 0.75rem;
+}
+
+html,
+body,
+#root {
+  height: 100%;
+  margin: 0;
+}
+
+body {
+  background-color: var(--color-background);
+  color: var(--color-foreground);
+  font-family: var(--font-sans);
+  overscroll-behavior: none;
+  -webkit-font-smoothing: antialiased;
+}

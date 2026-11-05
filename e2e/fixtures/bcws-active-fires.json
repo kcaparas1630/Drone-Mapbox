@@ -1,0 +1,358 @@
+{
+  "type": "FeatureCollection",
+  "crs": { "type": "name", "properties": { "name": "EPSG:4326" } },
+  "features": [
+    {
+      "type": "Feature",
+      "geometry": { "type": "Point", "coordinates": [-123.98986700054, 53.1690499999125] },
+      "properties": {
+        "FIRE_NUMBER": "C10952",
+        "INCIDENT_NAME": "C10952",
+        "FIRE_STATUS": "Under Control",
+        "CURRENT_SIZE": 1588,
+        "IGNITION_DATE": 1784243916000,
+        "GEOGRAPHIC_DESCRIPTION": "6.4 km S of Kluskoil Lake",
+        "FIRE_URL": "https://wildfiresituation.nrs.gov.bc.ca/incidents?fireYear=2026&incidentNumber=C10952",
+        "FIRE_OF_NOTE_IND": "N",
+        "FIRE_CAUSE": "Lightning",
+        "FIRE_CENTRE": 7
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": { "type": "Point", "coordinates": [-121.454749999594, 49.8934500003728] },
+      "properties": {
+        "FIRE_NUMBER": "V10742",
+        "INCIDENT_NAME": "Brunswick Creek",
+        "FIRE_STATUS": "Under Control",
+        "CURRENT_SIZE": 9543,
+        "IGNITION_DATE": 1783020034000,
+        "GEOGRAPHIC_DESCRIPTION": "Brunswick Creek",
+        "FIRE_URL": "https://wildfiresituation.nrs.gov.bc.ca/incidents?fireYear=2026&incidentNumber=V10742",
+        "FIRE_OF_NOTE_IND": "N",
+        "FIRE_CAUSE": "Person",
+        "FIRE_CENTRE": 2
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": { "type": "Point", "coordinates": [-123.771217000357, 48.4874499998882] },
+      "properties": {
+        "FIRE_NUMBER": "V62262",
+        "INCIDENT_NAME": "Mount Jack",
+        "FIRE_STATUS": "Under Control",
+        "CURRENT_SIZE": 337.23,
+        "IGNITION_DATE": 1789947237000,
+        "GEOGRAPHIC_DESCRIPTION": "Mount Jack",
+        "FIRE_URL": "https://wildfiresituation.nrs.gov.bc.ca/incidents?fireYear=2026&incidentNumber=V62262",
+        "FIRE_OF_NOTE_IND": "N",
+        "FIRE_CAUSE": "Person",
+        "FIRE_CENTRE": 2
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": { "type": "Point", "coordinates": [-124.011850000002, 53.4043169999921] },
+      "properties": {
+        "FIRE_NUMBER": "C11112",
+        "INCIDENT_NAME": "Bourgeois Creek",
+        "FIRE_STATUS": "Under Control",
+        "CURRENT_SIZE": 1644,
+        "IGNITION_DATE": 1784323850000,
+        "GEOGRAPHIC_DESCRIPTION": "E of Bourgeois Creek",
+        "FIRE_URL": "https://wildfiresituation.nrs.gov.bc.ca/incidents?fireYear=2026&incidentNumber=C11112",
+        "FIRE_OF_NOTE_IND": "N",
+        "FIRE_CAUSE": "Lightning",
+        "FIRE_CENTRE": 7
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": { "type": "Point", "coordinates": [-120.915867000661, 49.1225670000684] },
+      "properties": {
+        "FIRE_NUMBER": "V10958",
+        "INCIDENT_NAME": "Daynar Creek",
+        "FIRE_STATUS": "Under Control",
+        "CURRENT_SIZE": 654.76,
+        "IGNITION_DATE": 1784330783000,
+        "GEOGRAPHIC_DESCRIPTION": "Memaloose Creek",
+        "FIRE_URL": "https://wildfiresituation.nrs.gov.bc.ca/incidents?fireYear=2026&incidentNumber=V10958",
+        "FIRE_OF_NOTE_IND": "N",
+        "FIRE_CAUSE": "Lightning",
+        "FIRE_CENTRE": 2
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": { "type": "Point", "coordinates": [-123.879299999909, 48.6175830000448] },
+      "properties": {
+        "FIRE_NUMBER": "V62369",
+        "INCIDENT_NAME": "V62369",
+        "FIRE_STATUS": "Being Held",
+        "CURRENT_SIZE": 0.009,
+        "IGNITION_DATE": 1793746191000,
+        "GEOGRAPHIC_DESCRIPTION": "Clapp Creek",
+        "FIRE_URL": "https://wildfiresituation.nrs.gov.bc.ca/incidents?fireYear=2026&incidentNumber=V62369",
+        "FIRE_OF_NOTE_IND": "N",
+        "FIRE_CAUSE": "Person",
+        "FIRE_CENTRE": 2
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": { "type": "Point", "coordinates": [-123.646049999887, 57.8834170003899] },
+      "properties": {
+        "FIRE_NUMBER": "G92299",
+        "INCIDENT_NAME": "G92299",
+        "FIRE_STATUS": "Under Control",
+        "CURRENT_SIZE": 42,
+        "IGNITION_DATE": 1790724443000,
+        "GEOGRAPHIC_DESCRIPTION": "Creham Creek Muskwa Junction",
+        "FIRE_URL": "https://wildfiresituation.nrs.gov.bc.ca/incidents?fireYear=2026&incidentNumber=G92299",
+        "FIRE_OF_NOTE_IND": "N",
+        "FIRE_CAUSE": "Person",
+        "FIRE_CENTRE": 4
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": { "type": "Point", "coordinates": [-121.02033300062, 49.0004169999396] },
+      "properties": {
+        "FIRE_NUMBER": "V10885",
+        "INCIDENT_NAME": "Border 2",
+        "FIRE_STATUS": "Under Control",
+        "CURRENT_SIZE": 6277,
+        "IGNITION_DATE": 1784252855000,
+        "GEOGRAPHIC_DESCRIPTION": "Hozomeen Mountain",
+        "FIRE_URL": "https://wildfiresituation.nrs.gov.bc.ca/incidents?fireYear=2026&incidentNumber=V10885",
+        "FIRE_OF_NOTE_IND": "N",
+        "FIRE_CAUSE": "Lightning",
+        "FIRE_CENTRE": 2
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": { "type": "Point", "coordinates": [-123.377450000818, 57.9272999999849] },
+      "properties": {
+        "FIRE_NUMBER": "G92324",
+        "INCIDENT_NAME": "G92324",
+        "FIRE_STATUS": "Under Control",
+        "CURRENT_SIZE": 0.5,
+        "IGNITION_DATE": 1791494458000,
+        "GEOGRAPHIC_DESCRIPTION": "NW of Wenger Creek",
+        "FIRE_URL": "https://wildfiresituation.nrs.gov.bc.ca/incidents?fireYear=2026&incidentNumber=G92324",
+        "FIRE_OF_NOTE_IND": "N",
+        "FIRE_CAUSE": "Person",
+        "FIRE_CENTRE": 4
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": { "type": "Point", "coordinates": [-121.020199999465, 49.2069000003949] },
+      "properties": {
+        "FIRE_NUMBER": "V10942",
+        "INCIDENT_NAME": "Norwegian Creek",
+        "FIRE_STATUS": "Under Control",
+        "CURRENT_SIZE": 1339.77,
+        "IGNITION_DATE": 1784325621000,
+        "GEOGRAPHIC_DESCRIPTION": "Norwegian Creek",
+        "FIRE_URL": "https://wildfiresituation.nrs.gov.bc.ca/incidents?fireYear=2026&incidentNumber=V10942",
+        "FIRE_OF_NOTE_IND": "N",
+        "FIRE_CAUSE": "Lightning",
+        "FIRE_CENTRE": 2
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": { "type": "Point", "coordinates": [-121.808666999587, 50.9791170001231] },
+      "properties": {
+        "FIRE_NUMBER": "C40983",
+        "INCIDENT_NAME": "Pear Lake",
+        "FIRE_STATUS": "Under Control",
+        "CURRENT_SIZE": 165909.4,
+        "IGNITION_DATE": 1784340069000,
+        "GEOGRAPHIC_DESCRIPTION": "E of Pear Lake",
+        "FIRE_URL": "https://wildfiresituation.nrs.gov.bc.ca/incidents?fireYear=2026&incidentNumber=C40983",
+        "FIRE_OF_NOTE_IND": "N",
+        "FIRE_CAUSE": "Lightning",
+        "FIRE_CENTRE": 7
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": { "type": "Point", "coordinates": [-121.458383000604, 49.9474669998076] },
+      "properties": {
+        "FIRE_NUMBER": "V10755",
+        "INCIDENT_NAME": "Ainslie Creek",
+        "FIRE_STATUS": "Under Control",
+        "CURRENT_SIZE": 69705,
+        "IGNITION_DATE": 1783217481000,
+        "GEOGRAPHIC_DESCRIPTION": "Ainslie Creek",
+        "FIRE_URL": "https://wildfiresituation.nrs.gov.bc.ca/incidents?fireYear=2026&incidentNumber=V10755",
+        "FIRE_OF_NOTE_IND": "N",
+        "FIRE_CAUSE": "Person",
+        "FIRE_CENTRE": 2
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": { "type": "Point", "coordinates": [-116.375116999782, 49.602166999812] },
+      "properties": {
+        "FIRE_NUMBER": "N10947",
+        "INCIDENT_NAME": "Tower Creek ",
+        "FIRE_STATUS": "Under Control",
+        "CURRENT_SIZE": 1327,
+        "IGNITION_DATE": 1784326517000,
+        "GEOGRAPHIC_DESCRIPTION": "Tower Creek #2",
+        "FIRE_URL": "https://wildfiresituation.nrs.gov.bc.ca/incidents?fireYear=2026&incidentNumber=N10947",
+        "FIRE_OF_NOTE_IND": "N",
+        "FIRE_CAUSE": "Lightning",
+        "FIRE_CENTRE": 6
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": { "type": "Point", "coordinates": [-122.436916999705, 50.2534499999481] },
+      "properties": {
+        "FIRE_NUMBER": "V30941",
+        "INCIDENT_NAME": "Twin Two Creek",
+        "FIRE_STATUS": "Under Control",
+        "CURRENT_SIZE": 3772,
+        "IGNITION_DATE": 1784325770000,
+        "GEOGRAPHIC_DESCRIPTION": "Twin Two Creek",
+        "FIRE_URL": "https://wildfiresituation.nrs.gov.bc.ca/incidents?fireYear=2026&incidentNumber=V30941",
+        "FIRE_OF_NOTE_IND": "N",
+        "FIRE_CAUSE": "Lightning",
+        "FIRE_CENTRE": 2
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": { "type": "Point", "coordinates": [-115.905700000032, 49.670466999956] },
+      "properties": {
+        "FIRE_NUMBER": "N12341",
+        "INCIDENT_NAME": "N12341",
+        "FIRE_STATUS": "Under Control",
+        "CURRENT_SIZE": 0.009,
+        "IGNITION_DATE": 1792523357000,
+        "GEOGRAPHIC_DESCRIPTION": "Luke Creek",
+        "FIRE_URL": "https://wildfiresituation.nrs.gov.bc.ca/incidents?fireYear=2026&incidentNumber=N12341",
+        "FIRE_OF_NOTE_IND": "N",
+        "FIRE_CAUSE": "Person",
+        "FIRE_CENTRE": 6
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": { "type": "Point", "coordinates": [-124.210267000147, 49.9877669998791] },
+      "properties": {
+        "FIRE_NUMBER": "V52370",
+        "INCIDENT_NAME": null,
+        "FIRE_STATUS": "Under Control",
+        "CURRENT_SIZE": 0.02,
+        "IGNITION_DATE": 1793808611000,
+        "GEOGRAPHIC_DESCRIPTION": "Stillwater Main",
+        "FIRE_URL": "https://wildfiresituation.nrs.gov.bc.ca/incidents?fireYear=2026&incidentNumber=V52370",
+        "FIRE_OF_NOTE_IND": "N",
+        "FIRE_CAUSE": "Unknown",
+        "FIRE_CENTRE": 2
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": { "type": "Point", "coordinates": [-120.988717000727, 49.1371329996067] },
+      "properties": {
+        "FIRE_NUMBER": "V10898",
+        "INCIDENT_NAME": "Big Burn Creek",
+        "FIRE_STATUS": "Under Control",
+        "CURRENT_SIZE": 898.5,
+        "IGNITION_DATE": 1784297447000,
+        "GEOGRAPHIC_DESCRIPTION": "Big Burn Creek",
+        "FIRE_URL": "https://wildfiresituation.nrs.gov.bc.ca/incidents?fireYear=2026&incidentNumber=V10898",
+        "FIRE_OF_NOTE_IND": "N",
+        "FIRE_CAUSE": "Lightning",
+        "FIRE_CENTRE": 2
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": { "type": "Point", "coordinates": [-114.941249999339, 49.6831670003258] },
+      "properties": {
+        "FIRE_NUMBER": "N12339",
+        "INCIDENT_NAME": "N12339",
+        "FIRE_STATUS": "Under Control",
+        "CURRENT_SIZE": 2.1,
+        "IGNITION_DATE": 1792455498000,
+        "GEOGRAPHIC_DESCRIPTION": "Lladner Creek FSR",
+        "FIRE_URL": "https://wildfiresituation.nrs.gov.bc.ca/incidents?fireYear=2026&incidentNumber=N12339",
+        "FIRE_OF_NOTE_IND": "N",
+        "FIRE_CAUSE": "Person",
+        "FIRE_CENTRE": 6
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": { "type": "Point", "coordinates": [-125.375366999763, 52.6884499996884] },
+      "properties": {
+        "FIRE_NUMBER": "C50929",
+        "INCIDENT_NAME": "Lessard Lake",
+        "FIRE_STATUS": "Under Control",
+        "CURRENT_SIZE": 6224.45,
+        "IGNITION_DATE": 1784317877000,
+        "GEOGRAPHIC_DESCRIPTION": "5.3km NE of Lessard Lake",
+        "FIRE_URL": "https://wildfiresituation.nrs.gov.bc.ca/incidents?fireYear=2026&incidentNumber=C50929",
+        "FIRE_OF_NOTE_IND": "N",
+        "FIRE_CAUSE": "Lightning",
+        "FIRE_CENTRE": 7
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": { "type": "Point", "coordinates": [-116.986600000202, 49.9990000004414] },
+      "properties": {
+        "FIRE_NUMBER": "N72348",
+        "INCIDENT_NAME": "N72348",
+        "FIRE_STATUS": "Being Held",
+        "CURRENT_SIZE": 6,
+        "IGNITION_DATE": 1792620458000,
+        "GEOGRAPHIC_DESCRIPTION": "10 Mile Creek",
+        "FIRE_URL": "https://wildfiresituation.nrs.gov.bc.ca/incidents?fireYear=2026&incidentNumber=N72348",
+        "FIRE_OF_NOTE_IND": "N",
+        "FIRE_CAUSE": "Person",
+        "FIRE_CENTRE": 6
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": { "type": "Point", "coordinates": [-116.474680000034, 49.1107000004207] },
+      "properties": {
+        "FIRE_NUMBER": "N72357",
+        "INCIDENT_NAME": null,
+        "FIRE_STATUS": "Under Control",
+        "CURRENT_SIZE": 0.009,
+        "IGNITION_DATE": 1792981664000,
+        "GEOGRAPHIC_DESCRIPTION": "Okell Creek",
+        "FIRE_URL": "https://wildfiresituation.nrs.gov.bc.ca/incidents?fireYear=2026&incidentNumber=N72357",
+        "FIRE_OF_NOTE_IND": "N",
+        "FIRE_CAUSE": "Unknown",
+        "FIRE_CENTRE": 6
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": { "type": "Point", "coordinates": [-115.823799999491, 50.1654669995365] },
+      "properties": {
+        "FIRE_NUMBER": "N22363",
+        "INCIDENT_NAME": "N22363",
+        "FIRE_STATUS": "Under Control",
+        "CURRENT_SIZE": 0.15,
+        "IGNITION_DATE": 1793045231000,
+        "GEOGRAPHIC_DESCRIPTION": "Tamarack rd. South side of Columbia Lake ",
+        "FIRE_URL": "https://wildfiresituation.nrs.gov.bc.ca/incidents?fireYear=2026&incidentNumber=N22363",
+        "FIRE_OF_NOTE_IND": "N",
+        "FIRE_CAUSE": "Person",
+        "FIRE_CENTRE": 6
+      }
+    }
+  ]
+}

@@ -19,7 +19,7 @@ A name must tell the reader what the thing is responsible for, without opening i
   `bc-bounding-box.ts`.
 
 ### Functions and methods
-- `camelCase`, **starting with a verb** from the approved list (`eslint/approved-verbs.js`):
+- `camelCase`, **starting with a verb** from the approved list (`eslint/approved-verbs.ts`):
   `get set load fetch build create make compute calculate parse validate normalize convert to from
   is has can should handle on use render update step tick apply clamp sample plan select reset
   start stop init register dispose format map filter sort find read write save restore persist
@@ -30,7 +30,7 @@ A name must tell the reader what the thing is responsible for, without opening i
 - Acronyms keep their case: `fetchBCWildfireData`, `toMSLAltitude`. Hooks: `useX`. React
   components: `PascalCase` noun. Redux selectors: `selectX`. Thunks: verb phrase (`flyToPlace`).
 - Booleans: `is/has/can/should` prefix. Event handlers: `handleX` (component) / `onX` (prop).
-- Minimum identifier length 3, except loop/vector names `i j k x y z dt t`.
+- Minimum identifier length 3, except loop/vector names `i j k x y z dt t` and the `cn()` class helper (009).
 
 ### Variables and constants
 - `camelCase` variables; `UPPER_SNAKE_CASE` for module-level constants of primitive values
@@ -66,6 +66,6 @@ const data = await fetch(url)     // vague
 | `@typescript-eslint/naming-convention` | camelCase/PascalCase/UPPER_SNAKE by kind; boolean prefixes; no `I` prefix |
 | `local/function-name-starts-with-verb` | function declarations, exported arrow functions, methods; exempt PascalCase components and `use*` hooks |
 | `local/no-vague-identifier` | banned standalone identifiers (exact match) |
-| `id-length` (`min: 3`, exceptions listed) | short names |
+| `id-length` (`min: 3`, exceptions `i j k x y z dt t cn`; property keys exempt) | short names |
 
 All run in `bun run lint` → `bun run check` → Stop hook. Not auto-fixable; the agent renames.

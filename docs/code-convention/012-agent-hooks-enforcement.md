@@ -9,7 +9,8 @@ Stop hook fires. An agent cannot end its turn with a violation in the tree.
 `bun run typecheck && bun run lint && bun run format:check && bun run test && bun run check:scripts`
 
 `check:scripts` = `bun scripts/check-tests-exist.ts && bun scripts/count-todos.ts &&
-bun scripts/count-eslint-disables.ts && bun scripts/check-no-secrets.ts`
+bun scripts/count-eslint-disables.ts && bun scripts/check-no-secrets.ts &&
+bun scripts/check-hooks-configured.ts`
 
 E2E is excluded from the hook (minutes, needs a browser); CI runs it.
 
@@ -57,7 +58,7 @@ never block an edit); real failures surface at Stop.
 
 ## Local ESLint rules (`eslint/local-rules/`)
 
-Each rule is a file with a sibling test using `RuleTester`:
+Each rule is a TypeScript file built with `createRule` from `eslint/local-rules/create-rule.ts`, with a sibling test using `RuleTester`:
 
 | Rule | Convention |
 |---|---|
@@ -74,12 +75,12 @@ Each rule is a file with a sibling test using `RuleTester`:
 | `one-value-export-per-file` | 013 |
 | `related-type-exports-only` | 013 |
 
-The plugin is loaded inline in `eslint.config.js` (`plugins: { local: localRules }`); no npm
+The plugin is loaded inline in `eslint.config.ts` (`plugins: { local: localRules }`); no npm
 package needed.
 
 ## Enforcement of this convention
 
 - `scripts/check-hooks-configured.ts` (part of `check:scripts`) asserts `.claude/settings.json`
   contains the Stop hook above and that every rule listed here exists in `eslint/local-rules/`
-  and is referenced in `eslint.config.js`.
+  and is referenced in `eslint.config.ts`.
 - CI runs `bun run check` too, so a bypassed hook still fails the PR.

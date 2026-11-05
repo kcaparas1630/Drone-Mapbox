@@ -1,6 +1,6 @@
 # ADR 007 — Auto-route is a straight geodesic with terrain-following altitude
 
-Status: Accepted (2026-11-04)
+Status: Accepted (2026-11-04); path and altitude profile amended by ADR 022 (proposed)
 
 ## Context
 
