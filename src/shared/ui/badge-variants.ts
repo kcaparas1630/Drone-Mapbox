@@ -6,7 +6,7 @@ export const badgeVariants = cva(
   {
     variants: {
       tone: {
-        neutral: 'border-panel-border bg-panel text-foreground',
+        neutral: 'border-transparent bg-secondary text-secondary-foreground',
         info: 'border-transparent bg-secondary text-secondary-foreground',
         success: 'border-transparent bg-success text-primary-foreground',
         warning: 'border-transparent bg-warning text-primary-foreground',

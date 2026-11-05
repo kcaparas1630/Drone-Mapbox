@@ -1,4 +1,4 @@
-/* Global stylesheet: Tailwind v4, animation utilities and the FireflyBC design tokens (convention 009). */
+/* Global stylesheet: Tailwind v4, animation utilities and the Canopy overlay tokens (convention 009, ADR 023). */
 @import 'tailwindcss';
 @import 'tw-animate-css';
 
@@ -6,20 +6,22 @@
   --font-sans:
     ui-sans-serif, system-ui, -apple-system, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
 
-  --color-background: oklch(0.18 0.02 260);
-  --color-foreground: oklch(0.97 0.01 260);
-  --color-panel: oklch(0.21 0.02 260 / 0.82);
-  --color-panel-border: oklch(1 0 0 / 0.12);
-  --color-muted: oklch(0.32 0.02 260);
-  --color-muted-foreground: oklch(0.78 0.02 260);
-  --color-primary: oklch(0.72 0.18 50);
-  --color-primary-foreground: oklch(0.18 0.02 260);
-  --color-secondary: oklch(0.36 0.03 260);
-  --color-secondary-foreground: oklch(0.97 0.01 260);
-  --color-destructive: oklch(0.63 0.22 27);
-  --color-warning: oklch(0.82 0.16 85);
-  --color-success: oklch(0.8 0.18 135);
-  --color-ring: oklch(0.72 0.18 50);
+  --color-background: #0f1a14;
+  --color-foreground: #f8fafc;
+  --color-panel: rgb(28 43 34 / 0.94);
+  --color-panel-solid: #1c2b22;
+  --color-panel-border: #3a5243;
+  --color-muted: #24382b;
+  --color-muted-foreground: #a9bcae;
+  --color-primary: #f59e0b;
+  --color-primary-foreground: #171a1f;
+  --color-secondary: #24382b;
+  --color-secondary-foreground: #d7e2d9;
+  --color-destructive: #ef4444;
+  --color-warning: #fbbf24;
+  --color-success: #4ade80;
+  --color-ring: #f59e0b;
+  --color-status-ring: #16241b;
 
   --color-fire-out-of-control: #ff0000;
   --color-fire-being-held: #ffff00;
