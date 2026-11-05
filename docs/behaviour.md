@@ -105,8 +105,30 @@ below centre, so fires tens of kilometres ahead stay on screen (ADR 023). Applie
     nothing. It shows "Over British Columbia" while the first lookup runs or when it fails, and
     the coordinates (5 decimals, N/W) underneath.
   - Telemetry: speed (km/h), vertical speed (m/s, ▲/▼), altitude MSL and AGL.
-- On screens under 640 px wide, the nav cluster shows only the compass and the place name, and
-  the fire panel collapses to a "Fires (N)" button.
+- On a desktop browser narrower than 640 px, the nav cluster shows only the compass and the place
+  name, and the fire panel starts collapsed to its "Active fires (N)" header.
+
+### 4.2 Phone layouts (ADR 024)
+
+A phone is a device whose primary pointer is coarse and whose short side is under 640 px. Tablets
+and mouse/keyboard devices always get the cockpit of §4.1. The layout follows rotation live.
+
+- **Portrait:** everything is collapsed. Top row: wordmark with mode badge, a search icon button
+  (tapping it opens the search box; it collapses again when it loses focus while empty) and the
+  install icon. The fire panel shows only its "Active fires (N)" header; the nav cluster shows only
+  a small compass; the touch controls stay at the bottom. A notice at the centre says
+  "Turn your phone sideways — FireflyBC works best in landscape" with **Continue in portrait**,
+  which hides it for the rest of the session. Rotating to landscape removes it.
+- **Landscape:** the §4.1 cockpit at a smaller size. Top: wordmark, search, install icon and the
+  fire panel, which starts **collapsed** to its "Active fires (N)" header so the flight area uses
+  the full width. Opening it (or selecting a fire) turns the right side into a full-height
+  column, narrower than on desktop, with the details card under the list; collapsing it gives the
+  width back. Everything else sits in **one bottom bar**, so the middle of the screen stays clear:
+  the move stick in the bottom-left corner, the compass and a compact place/telemetry card (no
+  coordinates) centred between the sticks, then Boost and the climb slider at the bottom right of
+  the flight area. When the bar is too narrow for the card (small phone with the fire list open),
+  only the compass shows. The route banner sits just above the bar. The overlay keeps clear of
+  notches (safe-area insets).
 
 ## 5. Search → fly (ADR 008)
 
@@ -261,8 +283,9 @@ status)". Any input or Dismiss → `freeFlight`.
 | Low-end device (< 30 fps for 5 s) | Beacon pulse disabled, DPR capped at 1.5, label layer hidden; HUD note "Reduced detail" |
 | Tab hidden / backgrounded | rAF stops; on return `dt` clamp prevents teleport; fire poll timer continues (RTK Query) |
 | Window blur with keys held | All keys released on `blur` and `visibilitychange` |
-| Resize / orientation change | Map resizes; joystick re-lays out; camera unaffected |
-| 360 px wide phone | HUD collapses to badges; search is full-width overlay |
+| Resize / orientation change | Map resizes; phone overlay switches portrait ↔ landscape (§4.2), its local widget state (search text, status chip) resets; camera, route and selection unaffected |
+| 360 px wide phone, portrait | Collapsed layout and the rotate notice (§4.2) |
+| Phone with orientation lock | "Continue in portrait" dismisses the notice for the session; the collapsed layout stays usable |
 
 ### Network and data
 | Case | Behaviour |

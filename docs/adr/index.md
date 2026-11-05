@@ -29,6 +29,7 @@ without new information. Status values: `Accepted`, `Superseded by NNN`, `Deprec
 | [021](021-cockpit-ux-satellite-fire-list.md) | Cockpit UX: satellite basemap, nav cluster with compass and place name, fire list | Proposed |
 | [022](022-terrain-aware-route-profile.md) | Auto-route: terrain-aware curved path and a planned climb–cruise–descent profile (amends 007) | Proposed |
 | [023](023-fire-scene-perimeters-flames-canopy.md) | Fire scene: scorched perimeters, status-scaled flames, select-then-fly; Canopy theme (amends 015) | Proposed |
+| [024](024-mobile-orientation-layouts.md) | Mobile layouts: collapsed portrait with a rotate notice, compact landscape cockpit (amends 021) | Proposed |
 
 ## Writing a new ADR
 

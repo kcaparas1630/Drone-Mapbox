@@ -1,12 +1,14 @@
 // Search bar: type a BC place, pick a suggestion or a recent place, and the drone flies there (ADR 008, 019).
-import { useId } from 'react';
+import { useId, useState } from 'react';
 
 import { useOnlineStatus } from '@/shared/lib/browser';
 
 import { useSearchCombobox } from '../model/use-search-combobox';
+import { SearchOpenButton } from './search-open-button';
 import { SearchOptionsList } from './search-options-list';
 
-export type SearchBarProps = { mapboxToken: string };
+// isCollapsible: shows a search icon until tapped, and folds back when the box loses focus (phone portrait, §4.2).
+export type SearchBarProps = { mapboxToken: string; isCollapsible?: boolean };
 
 // Returns the hint shown when the list has nothing to offer.
 function readEmptyMessage(
@@ -23,13 +25,20 @@ function readEmptyMessage(
   return isLoading ? 'Searching…' : 'No places found in British Columbia.';
 }
 
-// Renders the combobox input, its options and inline errors.
-export function SearchBar({ mapboxToken }: SearchBarProps) {
+// Renders the combobox input, its options and inline errors, or the search icon while collapsed.
+export function SearchBar({ mapboxToken, isCollapsible = false }: SearchBarProps) {
   const listId = useId();
+  const [isExpanded, setIsExpanded] = useState(false);
   const isOnline = useOnlineStatus();
   const combobox = useSearchCombobox(mapboxToken);
   const { inputRef, query, isOpen, activeIndex, options, search } = combobox;
   const activeOptionId = activeIndex >= 0 ? `${listId}-${String(activeIndex)}` : undefined;
+  const expand = () => {
+    setIsExpanded(true);
+  };
+  if (isCollapsible && !isExpanded) {
+    return <SearchOpenButton onOpen={expand} />;
+  }
   return (
     <div role="search" className="w-full max-w-md">
       <input
@@ -52,7 +61,11 @@ export function SearchBar({ mapboxToken }: SearchBarProps) {
         onFocus={() => {
           combobox.setIsOpen(true);
         }}
-        onBlur={combobox.close}
+        autoFocus={isCollapsible}
+        onBlur={() => {
+          combobox.close();
+          setIsExpanded(false);
+        }}
         onKeyDown={combobox.handleKeyDown}
       />
       {isOpen ? (
