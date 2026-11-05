@@ -6,4 +6,5 @@ export { readEnv } from './env';
 export type { EnvConfig } from './env';
 export { FIRE_FEED } from './fire-feed';
 export { FLIGHT_TUNING } from './flight-tuning';
+export { MAPBOX_REQUEST_LIMITS } from './mapbox-request-limits';
 export { ROUTE_TUNING } from './route-tuning';

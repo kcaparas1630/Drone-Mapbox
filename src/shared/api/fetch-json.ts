@@ -11,13 +11,20 @@ const DEFAULT_TIMEOUT_MS = 10_000;
 const DEFAULT_MAX_BYTES = 10 * 1024 * 1024;
 const MAX_REPORTED_ISSUES = 3;
 
-// Fetches a URL and returns the schema-validated JSON body, or a typed, serialisable error.
+// Fetches a URL (after reserving from its budget, if given) and returns the validated JSON or a typed error.
 export async function fetchJson<Schema extends z.ZodType>(
   url: string,
   schema: Schema,
   options: FetchJsonOptions = {},
 ): Promise<Result<z.output<Schema>, FetchJsonError>> {
-  const { signal, timeoutMs = DEFAULT_TIMEOUT_MS, maxBytes = DEFAULT_MAX_BYTES } = options;
+  const { signal, timeoutMs = DEFAULT_TIMEOUT_MS, maxBytes = DEFAULT_MAX_BYTES, budget } = options;
+  const reservation = budget?.reserve();
+  if (reservation?.isAllowed === false) {
+    return toFailure(
+      'rate-limited',
+      `Request budget for this ${reservation.exceededWindow} is spent.`,
+    );
+  }
   const request = await fetchResponse(url, signal, timeoutMs);
   if (!request.isOk) {
     return request;
