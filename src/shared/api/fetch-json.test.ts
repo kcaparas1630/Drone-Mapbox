@@ -28,6 +28,20 @@ describe('fetchJson', () => {
     });
   });
 
+  it('refuses without fetching when the budget is spent, and fetches when it has room', async () => {
+    setFetchResponse('{"x": 1}', { headers: JSON_HEADERS });
+    const spent = { reserve: () => ({ isAllowed: false, exceededWindow: 'minute' }) as const };
+    const result = await fetchJson('https://a.test', pointSchema, { budget: spent });
+    expect(result).toMatchObject({ isOk: false, error: { kind: 'rate-limited', status: null } });
+    expect(fetch).not.toHaveBeenCalled();
+    const open = { reserve: vi.fn(() => ({ isAllowed: true }) as const) };
+    await expect(fetchJson('https://a.test', pointSchema, { budget: open })).resolves.toEqual({
+      isOk: true,
+      value: { x: 1 },
+    });
+    expect(open.reserve).toHaveBeenCalledOnce();
+  });
+
   it('rejects a 200 response whose shape fails the schema, like an ArcGIS {error}', async () => {
     setFetchResponse('{"error": {"code": 400}}', { headers: JSON_HEADERS });
     const result = await fetchJson('https://a.test', pointSchema);

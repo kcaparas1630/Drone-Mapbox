@@ -94,4 +94,5 @@ export const APPROVED_VERBS = [
   'track',
   'measure',
   'describe',
+  'reserve',
 ] as const;

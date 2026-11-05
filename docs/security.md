@@ -9,6 +9,7 @@ pipeline.
 | Threat | Impact | Control |
 |---|---|---|
 | Mapbox token copied from the bundle and used elsewhere | Our bill | URL-restricted prod token, minimal scopes, rotation (ADR 016); Mapbox usage alerts set by the owner |
+| Runaway or repeated Mapbox calls from our own client (bug, reload loop, heavy session) | Our bill, free tier exhausted | Per-API budgets: one-minute window and per-browser daily cap, checked before the request (ADR 025, behaviour §11) |
 | Dev token leaked (repo, CI logs, screenshots) | Our bill | `.env.local` git-ignored; `check-no-secrets` pre-commit; CI secret masked; rotate quarterly |
 | Malicious or malformed BCWS feed content | XSS, crash | zod at boundary, React text rendering only, no `setHTML`, URL host allowlist |
 | Malicious Search Box response | XSS | zod on retrieve, text rendering |

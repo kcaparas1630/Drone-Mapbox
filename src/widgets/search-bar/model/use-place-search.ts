@@ -1,12 +1,14 @@
-// Debounced Search Box suggestions (300 ms, ≥ 2 characters) with one session per search and stale requests aborted.
+// Debounced Search Box suggestions (300 ms, ≥ 2 chars, within budget), one session per search, stale requests aborted.
 import { type SearchBoxCore, type SearchBoxSuggestion, SessionToken } from '@mapbox/search-js-core';
 import { useEffect, useRef, useState } from 'react';
 
 import type { Place } from '@/entities/route';
+import { mapboxRequestBudgets } from '@/shared/api';
 import { useOnlineStatus } from '@/shared/lib/browser';
 import { useAppStore } from '@/shared/lib/redux';
 import type { Result } from '@/shared/lib/result';
 
+import { readSearchLimitMessage } from '../lib/read-search-limit-message';
 import { createPlaceSearch } from './create-place-search';
 import { readSearchErrorMessage } from './read-search-error-message';
 import { resolvePlace, type ResolvePlaceProblem } from './resolve-place';
@@ -51,6 +53,15 @@ export function usePlaceSearch(accessToken: string, query: string): UsePlaceSear
     }
     const controller = new AbortController();
     const timer = window.setTimeout(() => {
+      const reservation = mapboxRequestBudgets.searchSuggest.reserve();
+      if (!reservation.isAllowed) {
+        setState({
+          query: trimmed,
+          options: [],
+          error: readSearchLimitMessage(reservation.exceededWindow),
+        });
+        return;
+      }
       searchRef.current ??= createPlaceSearch(accessToken);
       sessionRef.current ??= new SessionToken();
       const snapshot = store.getState().droneSnapshot.snapshot;

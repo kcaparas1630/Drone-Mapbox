@@ -256,6 +256,8 @@ status)". Any input or Dismiss → `freeFlight`.
 - `localStorage['fireflybc.drone.v1'] = { v: 1, lng, lat, altMsl, headingRad, savedAt }` written at
   most every 2 s while moving and on `pagehide` / `visibilitychange: hidden`.
 - `localStorage['fireflybc.prefs.v1'] = { v: 1, recents: [...≤10], followDistanceM }`.
+- `localStorage['fireflybc.quota.<api>.v1'] = { v: 1, day: 'YYYY-MM-DD', count }`: the Mapbox
+  requests sent from this browser today, one key per budgeted API (§11).
 - Invalid or outside-BC values are discarded with a `console.warn` via `reportError`.
 
 ## 9. Tunables (`src/shared/config/`)
@@ -272,6 +274,7 @@ status)". Any input or Dismiss → `freeFlight`.
 | `FOLLOW_DISTANCE_M` / `FOLLOW_HEIGHT_M` | 60 / 25 | `camera-tuning.ts` |
 | `FIRE_POLL_MS` | 600 000 | `fire-feed.ts` |
 | `FIRE_STALE_WARN_MS` / `FIRE_STALE_ERROR_MS` | 1 800 000 / 7 200 000 | `fire-feed.ts` |
+| `MAPBOX_REQUEST_LIMITS` (per minute / per day) | see §11 | `mapbox-request-limits.ts` |
 
 ## 10. Edge cases and required behaviour
 
@@ -304,6 +307,7 @@ status)". Any input or Dismiss → `freeFlight`.
 | Huge feed (> 10 MB) | `fetchJson` aborts; feed error |
 | Search returns place outside BC | Toast; no flight |
 | Search 429 / network error | Inline error in the box; drone unaffected |
+| A Mapbox request budget is spent (§11) | No request is sent; the caller's normal failure path runs |
 
 ### Input and modes
 | Case | Behaviour |
@@ -339,3 +343,19 @@ status)". Any input or Dismiss → `freeFlight`.
 | Feed text contains HTML/script | Rendered as text by React; never HTML |
 | `FIRE_URL` host not allow-listed | Link omitted; fire number shown as text |
 | Token missing at build | Build fails (`env.ts` validation at startup, `check-no-secrets` prevents committing one) |
+
+## 11. Mapbox request budgets (ADR 025)
+
+Every Mapbox API call the app makes itself is counted against a budget before it is sent: a
+sliding one-minute window (per tab) and a daily cap (per browser, local date, persisted). Map loads
+and GL JS tile requests are not budgeted: the map is created once per page load.
+
+| API | Per minute | Per day | Over budget |
+|---|---|---|---|
+| Search Box suggest | 30 | 300 | Inline "Search limit reached — try again in a minute." (or "…today on this device. Recent places still work.") |
+| Search Box retrieve | 10 | 50 | Toast "Search limit reached — try again later."; nothing flies |
+| Geocoding v6 reverse | 20 | 1 000 | Place name keeps its last value or "Over British Columbia"; retried after 60 s |
+| Terrain-DEM tiles | 48 | 480 | The whole batch is refused up front; the route keeps the great circle (§6.2) |
+
+All numbers are *(tunable)*. A batch (DEM tiles) is allowed only if all of it fits; it never
+spends part of a budget.
