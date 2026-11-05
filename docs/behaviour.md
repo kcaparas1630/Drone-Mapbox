@@ -87,6 +87,10 @@ Each frame: camera position = drone position − forward × `FOLLOW_DISTANCE_M` 
 (40 m, scaled the same way). Aiming just ahead keeps the horizon in view and the drone a little
 below centre, so fires tens of kilometres ahead stay on screen (ADR 023). Applied with
 `map.setFreeCameraOptions`. Orbit offset from drag is added to the forward vector before placement.
+The default framing draws the drone ~22.6 % of the view height below the centre of view (Mapbox's
+36.87° vertical field of view; speed pull-back does not change it). A cockpit that would cover that
+spot moves the centre of view with `map.setPadding`, which shifts the picture without changing the
+camera pose. Only the phone landscape cockpit does this (§4.2); elsewhere the padding is zero.
 `prefers-reduced-motion` disables orbit easing and bank animation.
 
 ### 4.1 Cockpit layout (ADR 021)
@@ -128,7 +132,13 @@ and mouse/keyboard devices always get the cockpit of §4.1. The layout follows r
   coordinates) centred between the sticks, then Boost and the climb slider at the bottom right of
   the flight area. When the bar is too narrow for the card (small phone with the fire list open),
   only the compass shows. The route banner sits just above the bar. The overlay keeps clear of
-  notches (safe-area insets).
+  notches (safe-area insets). The short viewport would otherwise draw the drone under the
+  telemetry card, so the camera is padded (§4) to draw it three quarters of the way down the clear
+  band between the top row and the centre instruments (compass and card), *(tunable:
+  `LANDSCAPE_DRONE_BAND_RATIO` 0.75)*, about 25–60 px above them. The picture shifts up by ~60 px,
+  so the horizon sits at or just above the top edge. The padding follows the measured row and
+  instruments as they resize (rotation, safe areas, card hidden); opening the fire column does not
+  change it.
 
 ## 5. Search → fly (ADR 008)
 

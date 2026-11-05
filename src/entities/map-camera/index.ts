@@ -4,6 +4,7 @@ export { applyOrbitDrag } from './lib/apply-orbit-drag';
 export { computeChaseCamera } from './lib/compute-chase-camera';
 export type { ChaseCameraInput, ChaseCameraPose } from './lib/compute-chase-camera';
 export { easeOrbitOffset } from './lib/ease-orbit-offset';
+export { getDroneDropRatio } from './lib/get-drone-drop-ratio';
 export {
   cameraPrefsSlice,
   followDistanceChanged,

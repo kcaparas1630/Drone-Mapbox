@@ -5,8 +5,10 @@ import { loadSavedDroneState, restoreDroneSpawn } from '@/entities/drone';
 import { useOnlineStatus } from '@/shared/lib/browser';
 import { reportError } from '@/shared/lib/report-error';
 
+import type { CameraPadding } from '../model/camera-padding.types';
 import type { MapStatus, MapStatusPatch } from '../model/map-status.types';
 import { useActiveFireFeed } from '../model/use-active-fire-feed';
+import { useCameraPadding } from '../model/use-camera-padding';
 import { useDroneSimulation } from '../model/use-drone-simulation';
 import type { FireHover } from '../model/fire-hover.types';
 import { useFireFootprintsLayer } from '../model/use-fire-footprints-layer';
@@ -23,6 +25,7 @@ export type MapViewProps = {
   isDevBuild: boolean;
   status: MapStatus;
   onStatusPatch: (patch: MapStatusPatch) => void;
+  cameraPadding: CameraPadding;
 };
 
 // Restores the launch spawn once, warning when a saved position had to be discarded.
@@ -35,7 +38,13 @@ function readLaunchSpawn() {
 }
 
 // Renders the map container, starts the drone on it and shows the status overlay.
-export function MapView({ mapboxToken, isDevBuild, status, onStatusPatch }: MapViewProps) {
+export function MapView({
+  mapboxToken,
+  isDevBuild,
+  status,
+  onStatusPatch,
+  cameraPadding,
+}: MapViewProps) {
   const containerRef = useRef<HTMLDivElement>(null);
   const [spawn] = useState(readLaunchSpawn);
   const isOnline = useOnlineStatus();
@@ -49,6 +58,7 @@ export function MapView({ mapboxToken, isDevBuild, status, onStatusPatch }: MapV
     onStatusPatch,
   });
   useDroneSimulation(map, { spawn, isDevBuild, fires, isReducedDetail: status.isReducedDetail });
+  useCameraPadding(map, cameraPadding);
   useLowFrameRateFallback(map, onStatusPatch);
   useRouteLine(map);
   useTerrainAwareRoute(mapboxToken);

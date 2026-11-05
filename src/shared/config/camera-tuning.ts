@@ -1,4 +1,4 @@
-// Chase camera distances, orbit limits and easing from docs/behaviour.md §3.1, §4 and §6.5 (ADR 014).
+// Chase camera distances, orbit limits, easing and framing from docs/behaviour.md §3.1, §4, §4.2, §6.5 (ADR 014, 024).
 
 const DEG_TO_RAD = Math.PI / 180;
 
@@ -16,4 +16,7 @@ export const CAMERA_TUNING = {
   ORBIT_EASE_BACK_S: 1.5,
   ARRIVAL_ORBIT_RAD_PER_S: 10 * DEG_TO_RAD,
   MIN_CAMERA_AGL_M: 5,
+  // Mapbox GL v3's default vertical field of view, 2·atan(1/3) ≈ 36.87°; the app never changes it.
+  MAPBOX_VERTICAL_FOV_RAD: 0.6435011087932844,
+  LANDSCAPE_DRONE_BAND_RATIO: 0.75,
 } as const;

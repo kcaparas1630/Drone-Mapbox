@@ -8,20 +8,31 @@ import { FirePanel } from '@/widgets/fire-panel';
 import { FirePopup } from '@/widgets/fire-popup';
 import { FlightHud, NavCluster, OfflineBanner, PwaControls } from '@/widgets/hud';
 import { Joystick } from '@/widgets/joystick';
-import type { MapStatus } from '@/widgets/map-view';
+import type { CameraPadding, MapStatus } from '@/widgets/map-view';
 import { RouteBanner } from '@/widgets/route-banner';
 import { SearchBar } from '@/widgets/search-bar';
 
-export type LandscapeCockpitProps = { mapboxToken: string; mapStatus: MapStatus };
+import { useFlightAreaPadding } from '../model/use-flight-area-padding';
+
+export type LandscapeCockpitProps = {
+  mapboxToken: string;
+  mapStatus: MapStatus;
+  onCameraPaddingChange: (padding: CameraPadding) => void;
+};
 
 // Renders a grid whose fire column is full height only while the list or a fire is open, else just its header.
-export function LandscapeCockpit({ mapboxToken, mapStatus }: LandscapeCockpitProps) {
+export function LandscapeCockpit(props: LandscapeCockpitProps) {
+  const { mapboxToken, mapStatus, onCameraPaddingChange } = props;
   const [isFirePanelOpen, setIsFirePanelOpen] = useState(false);
+  const { overlayRef, topRowRef, bottomBarRef } = useFlightAreaPadding(onCameraPaddingChange);
   const isFireSelected = useAppSelector(selectSelectedFireNumber) !== null;
   const isFireColumnTall = isFirePanelOpen || isFireSelected;
   return (
-    <div className="pointer-events-none absolute inset-0 z-10 grid grid-cols-[minmax(0,1fr)_auto] grid-rows-[auto_minmax(0,1fr)] gap-2 pt-[max(0.5rem,env(safe-area-inset-top))] pr-[max(0.5rem,env(safe-area-inset-right))] pb-[max(0.5rem,env(safe-area-inset-bottom))] pl-[max(0.5rem,env(safe-area-inset-left))]">
-      <div className="col-[1/2] row-[1/2] flex items-start gap-2">
+    <div
+      ref={overlayRef}
+      className="pointer-events-none absolute inset-0 z-10 grid grid-cols-[minmax(0,1fr)_auto] grid-rows-[auto_minmax(0,1fr)] gap-2 pt-[max(0.5rem,env(safe-area-inset-top))] pr-[max(0.5rem,env(safe-area-inset-right))] pb-[max(0.5rem,env(safe-area-inset-bottom))] pl-[max(0.5rem,env(safe-area-inset-left))]"
+    >
+      <div ref={topRowRef} className="col-[1/2] row-[1/2] flex items-start gap-2">
         <div className="pointer-events-auto shrink-0">
           <FlightHud
             isCompact
@@ -62,7 +73,9 @@ export function LandscapeCockpit({ mapboxToken, mapStatus }: LandscapeCockpitPro
           </div>
         </div>
         <Joystick isCompact>
-          <NavCluster mapboxToken={mapboxToken} variant="compact" />
+          <div ref={bottomBarRef} className="w-full min-w-0">
+            <NavCluster mapboxToken={mapboxToken} variant="compact" />
+          </div>
         </Joystick>
       </div>
     </div>
