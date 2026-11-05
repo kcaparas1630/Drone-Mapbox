@@ -1,55 +1,71 @@
-// Tests progress along a great-circle route: start, midpoint, arrival and the changing bearing.
-import turfBearing from '@turf/bearing';
-import turfDistance from '@turf/distance';
+// Tests progress along a planned polyline: start, eased midpoint, planned altitude, bearing and arrival.
 import { describe, expect, it } from 'vitest';
 
-import type { RouteProgressPoint } from '../model/route-progress.types';
+import type { RouteProgressInput, RouteProgressPoint } from '../model/route-progress.types';
 import { stepAlongRoute } from './step-along-route';
 
-const SUMMERLAND = { name: 'Summerland', lng: -119.68, lat: 49.6 };
-const VANCOUVER: [number, number] = [-123.12, 49.28];
-const TARGET: [number, number] = [SUMMERLAND.lng, SUMMERLAND.lat];
-const PLAN = {
-  originLng: VANCOUVER[0],
-  originLat: VANCOUVER[1],
-  distanceM: turfDistance(VANCOUVER, TARGET, { units: 'meters' }),
-  durationS: 45,
-  initialBearingRad: (((turfBearing(VANCOUVER, TARGET) + 360) % 360) * Math.PI) / 180,
-};
-const ROUTE = { ...PLAN, destinationLng: SUMMERLAND.lng, destinationLat: SUMMERLAND.lat };
+// Builds a 3-point route: 11.1 km north climbing 1,000 → 2,000 m, then 7.3 km east holding 2,000 m.
+function buildRoute(): RouteProgressInput {
+  const capacity = 8;
+  const route = {
+    durationS: 40,
+    pathCount: 3,
+    pathLngs: new Float64Array(capacity),
+    pathLats: new Float64Array(capacity),
+    pathAltitudesMsl: new Float64Array(capacity),
+    pathDistancesM: new Float64Array(capacity),
+    segmentIndex: 0,
+  };
+  route.pathLngs.set([-122, -122, -121.9]);
+  route.pathLats.set([54, 54.1, 54.1]);
+  route.pathAltitudesMsl.set([1000, 2000, 2000]);
+  route.pathDistancesM.set([0, 11_119, 17_642]);
+  return route;
+}
 
-// Returns the progress point after the given flight time.
-function readProgressAt(elapsedS: number): RouteProgressPoint {
-  const out = { lng: 0, lat: 0, pathBearingRad: 0, remainingM: 0, isComplete: false };
-  stepAlongRoute(out, ROUTE, elapsedS);
-  return out;
+// Returns a fresh progress point.
+function createPoint(): RouteProgressPoint {
+  return {
+    lng: 0,
+    lat: 0,
+    altitudeMsl: 0,
+    profileSlope: 0,
+    pathBearingRad: 0,
+    remainingM: 0,
+    isComplete: false,
+  };
 }
 
 describe('stepAlongRoute', () => {
-  it('starts at the origin on the initial bearing', () => {
-    const start = readProgressAt(0);
-    expect(start.lng).toBeCloseTo(-123.12, 9);
-    expect(start.lat).toBeCloseTo(49.28, 9);
-    expect(start.pathBearingRad).toBeCloseTo(PLAN.initialBearingRad, 6);
-    expect(start.isComplete).toBe(false);
+  it('starts at the first point heading along the path with its planned altitude', () => {
+    const out = createPoint();
+    stepAlongRoute(out, buildRoute(), 0);
+    expect(out.lng).toBeCloseTo(-122, 9);
+    expect(out.lat).toBeCloseTo(54, 9);
+    expect(out.altitudeMsl).toBeCloseTo(1000, 6);
+    expect(out.pathBearingRad).toBeCloseTo(0, 3);
+    expect(out.profileSlope).toBeCloseTo(1000 / 11_119, 6);
+    expect(out.isComplete).toBe(false);
   });
 
-  it('is halfway at half time and the bearing has turned along the great circle', () => {
-    const middle = readProgressAt(PLAN.durationS / 2);
-    expect(middle.remainingM / PLAN.distanceM).toBeCloseTo(0.5, 3);
-    expect(middle.pathBearingRad).not.toBeCloseTo(PLAN.initialBearingRad, 3);
+  it('is halfway along the path at half time and climbing on the first leg', () => {
+    const route = buildRoute();
+    const out = createPoint();
+    stepAlongRoute(out, route, 20);
+    expect(out.remainingM).toBeCloseTo(17_642 / 2, 0);
+    expect(route.segmentIndex).toBe(0);
+    expect(out.altitudeMsl).toBeCloseTo(1000 + (8821 / 11_119) * 1000, 0);
   });
 
-  it('reaches the destination at the end and reports completion', () => {
-    const end = readProgressAt(PLAN.durationS + 1);
-    expect(end.remainingM).toBeLessThan(1);
-    expect(end.isComplete).toBe(true);
-    expect(end.pathBearingRad).toBe(PLAN.initialBearingRad);
-  });
-
-  it('completes immediately for a zero-duration route', () => {
-    const out = { lng: 0, lat: 0, pathBearingRad: 0, remainingM: 0, isComplete: false };
-    stepAlongRoute(out, { ...ROUTE, durationS: 0 }, 0);
+  it('turns east after the corner and completes at the last point', () => {
+    const route = buildRoute();
+    const out = createPoint();
+    stepAlongRoute(out, route, 36);
+    expect(route.segmentIndex).toBe(1);
+    expect((out.pathBearingRad * 180) / Math.PI).toBeCloseTo(90, 0);
+    stepAlongRoute(out, route, 40);
+    expect(out.lng).toBeCloseTo(-121.9, 9);
+    expect(out.remainingM).toBeCloseTo(0, 6);
     expect(out.isComplete).toBe(true);
   });
 });

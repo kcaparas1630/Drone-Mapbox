@@ -1,7 +1,13 @@
-// Tests that each plan gets a new route id and that clearing removes the active route.
+// Tests route ids, attaching the planned path to the right route, and clearing the active route.
 import { describe, expect, it } from 'vitest';
 
-import { routeCleared, routePlanned, routeSlice, selectActiveRoute } from './route.slice';
+import {
+  routeCleared,
+  routePathPlanned,
+  routePlanned,
+  routeSlice,
+  selectActiveRoute,
+} from './route.slice';
 
 const DRAFT = {
   destination: { name: 'Summerland', lng: -119.68, lat: 49.6 },
@@ -25,5 +31,15 @@ describe('routeSlice', () => {
     const cleared = routeSlice.reducer(planned, routeCleared());
     expect(selectActiveRoute({ route: cleared })).toBeNull();
     expect(cleared.lastRouteId).toBe(1);
+  });
+
+  it('attaches a planned path only to the route it was planned for', () => {
+    const path = { lngs: [-123.12, -119.68], lats: [49.28, 49.6], altitudesMsl: [500, 800] };
+    const planned = routeSlice.reducer(undefined, routePlanned(DRAFT));
+    expect(planned.activeRoute?.path).toBeNull();
+    const stale = routeSlice.reducer(planned, routePathPlanned({ routeId: 99, path }));
+    expect(stale.activeRoute?.path).toBeNull();
+    const attached = routeSlice.reducer(planned, routePathPlanned({ routeId: 1, path }));
+    expect(attached.activeRoute?.path).toEqual(path);
   });
 });

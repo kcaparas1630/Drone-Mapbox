@@ -1,5 +1,6 @@
 // Serialisable description of a planned auto-route; routeId increases with every plan, including resumes.
 import type { Place } from './place.schema';
+import type { RoutePath } from './route-path.types';
 
 export type RoutePlanDraft = {
   destination: Place;
@@ -10,4 +11,5 @@ export type RoutePlanDraft = {
   initialBearingRad: number;
 };
 
-export type RoutePlan = RoutePlanDraft & { routeId: number };
+// path is null until the terrain-aware planner attaches one (ADR 022).
+export type RoutePlan = RoutePlanDraft & { routeId: number; path: RoutePath | null };

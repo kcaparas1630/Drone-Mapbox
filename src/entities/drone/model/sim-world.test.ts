@@ -29,4 +29,11 @@ describe('createSimWorld', () => {
     expect(world.terrainSamplesM).toEqual([null, null, null, null]);
     expect(world.route.routeId).toBe(0);
   });
+
+  it('preallocates the route path buffers so starting a route never allocates per frame', () => {
+    const world = createSimWorld({ lng: -120, lat: 50, altitudeMsl: null, headingRad: 0 });
+    expect(world.route.pathLngs).toHaveLength(256);
+    expect(world.route.pathDistancesM).toHaveLength(256);
+    expect(world.route).toMatchObject({ pathCount: 0, segmentIndex: 0, adoptedPath: null });
+  });
 });

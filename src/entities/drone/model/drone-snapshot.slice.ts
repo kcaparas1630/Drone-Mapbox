@@ -12,6 +12,8 @@ export type DroneSnapshot = {
   isAtBcEdge: boolean;
   isAtCeiling: boolean;
   isTerrainMissing: boolean;
+  routeRemainingM: number;
+  routeRemainingS: number;
   publishedAtMs: number;
 };
 

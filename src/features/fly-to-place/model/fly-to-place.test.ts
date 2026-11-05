@@ -30,6 +30,8 @@ describe('flyToPlace', () => {
         isAtBcEdge: false,
         isAtCeiling: false,
         isTerrainMissing: false,
+        routeRemainingM: 0,
+        routeRemainingS: 0,
         publishedAtMs: 0,
       }),
     );

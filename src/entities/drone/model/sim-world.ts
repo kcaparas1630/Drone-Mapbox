@@ -1,5 +1,5 @@
 // The mutable 60 fps simulation state read and written by the frame loop, never by React or Redux (ADR 001).
-import { FLIGHT_TUNING } from '@/shared/config';
+import { FLIGHT_TUNING, ROUTE_TUNING } from '@/shared/config';
 
 import { createDroneInput, type DroneInput } from './drone-input';
 import type { DroneSpawn } from './drone-spawn.types';
@@ -14,6 +14,14 @@ export type SimWorldRoute = {
   destinationLng: number;
   destinationLat: number;
   initialBearingRad: number;
+  pathCount: number;
+  pathLngs: Float64Array;
+  pathLats: Float64Array;
+  pathAltitudesMsl: Float64Array;
+  pathDistancesM: Float64Array;
+  segmentIndex: number;
+  adoptedPath: object | null;
+  remainingM: number;
 };
 
 export type SimWorld = {
@@ -65,6 +73,14 @@ export function createSimWorld(spawn: DroneSpawn): SimWorld {
       destinationLng: spawn.lng,
       destinationLat: spawn.lat,
       initialBearingRad: 0,
+      pathCount: 0,
+      pathLngs: new Float64Array(ROUTE_TUNING.MAX_PATH_POINTS),
+      pathLats: new Float64Array(ROUTE_TUNING.MAX_PATH_POINTS),
+      pathAltitudesMsl: new Float64Array(ROUTE_TUNING.MAX_PATH_POINTS),
+      pathDistancesM: new Float64Array(ROUTE_TUNING.MAX_PATH_POINTS),
+      segmentIndex: 0,
+      adoptedPath: null,
+      remainingM: 0,
     },
   };
 }

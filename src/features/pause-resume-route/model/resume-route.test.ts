@@ -44,6 +44,8 @@ function buildPausedStore(lng: number, lat: number) {
       isAtBcEdge: false,
       isAtCeiling: false,
       isTerrainMissing: false,
+      routeRemainingM: 0,
+      routeRemainingS: 0,
       publishedAtMs: 0,
     }),
   );
