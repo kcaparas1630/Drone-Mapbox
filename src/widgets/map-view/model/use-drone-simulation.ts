@@ -3,6 +3,7 @@ import type { Map as MapboxMap } from 'mapbox-gl';
 import { useEffect, useRef } from 'react';
 
 import { createSimWorld, type DroneSpawn } from '@/entities/drone';
+import type { Fire } from '@/entities/fire';
 import { useKeyboardDroneControls } from '@/features/control-drone';
 import { usePrefersReducedMotion } from '@/shared/lib/browser';
 import { useAppStore } from '@/shared/lib/redux';
@@ -19,12 +20,14 @@ export function useDroneSimulation(
   map: MapboxMap | null,
   spawn: DroneSpawn,
   isDevBuild: boolean,
+  fires: readonly Fire[] | undefined,
 ): void {
   const store = useAppStore();
   const isReducedMotion = usePrefersReducedMotion();
   const contextRef = useRef<FrameLoopContext | null>(null);
   const spawnRef = useRef(spawn);
   const isReducedMotionRef = useRef(isReducedMotion);
+  const firesRef = useRef(fires);
   useKeyboardDroneControls();
   useEffect(() => {
     isReducedMotionRef.current = isReducedMotion;
@@ -33,11 +36,20 @@ export function useDroneSimulation(
     }
   }, [isReducedMotion]);
   useEffect(() => {
+    firesRef.current = fires;
+    if (contextRef.current !== null) {
+      contextRef.current.fireBeacons.fires = fires ?? [];
+      contextRef.current.fireBeacons.version += 1;
+    }
+  }, [fires]);
+  useEffect(() => {
     if (map === null) {
       return undefined;
     }
     const context = createFrameLoopContext(map, createSimWorld(spawnRef.current), store);
     context.flags.isReducedMotion = isReducedMotionRef.current;
+    context.fireBeacons.fires = firesRef.current ?? [];
+    context.fireBeacons.version = 1;
     contextRef.current = context;
     if (isDevBuild) {
       publishDebugContext(context);

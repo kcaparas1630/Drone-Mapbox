@@ -45,7 +45,7 @@ export function MapView({ mapboxToken, isDevBuild, status, onStatusPatch }: MapV
     centreLat: spawn.lat,
     onStatusPatch,
   });
-  useDroneSimulation(map, spawn, isDevBuild);
+  useDroneSimulation(map, spawn, isDevBuild, fires);
   useRouteLine(map);
   useFirePointsLayer(map, fires, setFireHover);
   return (

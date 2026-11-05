@@ -10,5 +10,5 @@ export function resetDroneLayer(map: MapboxMap, context: FrameLoopContext): void
   if (map.getLayer(MAP_STYLE.DRONE_LAYER_ID) !== undefined) {
     map.removeLayer(MAP_STYLE.DRONE_LAYER_ID);
   }
-  map.addLayer(createDroneLayer(context.world));
+  map.addLayer(createDroneLayer(context));
 }

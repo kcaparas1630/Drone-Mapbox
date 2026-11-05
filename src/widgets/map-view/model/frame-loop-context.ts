@@ -2,6 +2,7 @@
 import type { Map as MapboxMap } from 'mapbox-gl';
 
 import type { SimWorld } from '@/entities/drone';
+import type { Fire } from '@/entities/fire';
 import {
   type ChaseCameraInput,
   type ChaseCameraPose,
@@ -20,7 +21,8 @@ export type FrameLoopContext = {
   cameraPose: ChaseCameraPose;
   terrainFollow: TerrainFollowState;
   routeProgress: RouteProgressPoint;
-  flags: { isReducedMotion: boolean; isContextLost: boolean };
+  fireBeacons: { fires: readonly Fire[]; version: number };
+  flags: { isReducedMotion: boolean; isReducedDetail: boolean; isContextLost: boolean };
 };
 
 // Returns a context for one map and world with every scratch buffer preallocated.
@@ -55,6 +57,7 @@ export function createFrameLoopContext(
     },
     terrainFollow: createTerrainFollowState(),
     routeProgress: { lng: 0, lat: 0, pathBearingRad: 0, remainingM: 0, isComplete: false },
-    flags: { isReducedMotion: false, isContextLost: false },
+    fireBeacons: { fires: [], version: 0 },
+    flags: { isReducedMotion: false, isReducedDetail: false, isContextLost: false },
   };
 }

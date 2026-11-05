@@ -2,11 +2,14 @@
 import type { CustomLayerInterface, Map as MapboxMap } from 'mapbox-gl';
 import { Camera, type Group, type Object3D, WebGLRenderer } from 'three';
 
-import { disposeObject3d, loadDroneModel, type SimWorld } from '@/entities/drone';
+import { disposeObject3d, loadDroneModel } from '@/entities/drone';
 import { reportError } from '@/shared/lib/report-error';
 
 import { MAP_STYLE } from '../config/map-style';
 import { createDroneScene } from './create-drone-scene';
+import { createFireBeacons } from './create-fire-beacons';
+import type { FrameLoopContext } from './frame-loop-context';
+import { updateBeaconsIfDue } from './update-beacons-if-due';
 import { createSceneOrigin } from './scene-origin';
 import { updateDroneTransform } from './update-drone-transform';
 import { updateLayerCamera } from './update-layer-camera';
@@ -41,11 +44,15 @@ function loadDroneModelIntoLayer(
     });
 }
 
-// Builds the layer for a simulation world; render() reads the world each frame and never allocates.
-export function createDroneLayer(world: SimWorld): CustomLayerInterface {
+// Builds the layer for the loop context; render() reads the world and beacons each frame and never allocates.
+export function createDroneLayer(context: FrameLoopContext): CustomLayerInterface {
+  const { world } = context;
   const origin = createSceneOrigin(world.lng, world.lat);
   const { scene, droneRoot, placeholder } = createDroneScene();
   const camera = new Camera();
+  const beacons = createFireBeacons();
+  scene.add(beacons.group);
+  let layerMap: MapboxMap | null = null;
   const propellers: Object3D[] = [];
   let renderer: WebGLRenderer | null = null;
   let isRemoved = false;
@@ -61,14 +68,16 @@ export function createDroneLayer(world: SimWorld): CustomLayerInterface {
         antialias: true,
       });
       renderer.autoClear = false;
+      layerMap = map;
       loadDroneModelIntoLayer(map, droneRoot, placeholder, propellers, () => isRemoved);
     },
     render(_glContext, matrix) {
-      if (renderer === null) {
+      if (renderer === null || layerMap === null) {
         return;
       }
       const nowMs = performance.now();
-      updateSceneOrigin(origin, world.lng, world.lat);
+      const isOriginRebased = updateSceneOrigin(origin, world.lng, world.lat);
+      updateBeaconsIfDue(beacons, context, origin, layerMap, nowMs, isOriginRebased);
       updateDroneTransform(droneRoot, world, origin);
       updatePropellers(propellers, world.speedMps, (nowMs - lastRenderMs) / 1000);
       lastRenderMs = nowMs;
@@ -81,6 +90,7 @@ export function createDroneLayer(world: SimWorld): CustomLayerInterface {
       disposeObject3d(scene);
       renderer?.dispose();
       renderer = null;
+      layerMap = null;
     },
   };
 }
