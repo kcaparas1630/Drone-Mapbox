@@ -34,7 +34,8 @@ export function FireStatusChips({
               onSelect(filter.id);
             }}
             className={cn(
-              'inline-flex min-h-7 shrink-0 items-center gap-1 rounded-full border px-2.5 text-[11px] font-semibold transition-colors',
+              'inline-flex min-h-7 items-center gap-1 rounded-full border px-2.5 text-[11px] font-semibold transition-colors',
+              isCompact ? 'shrink-0' : '',
               isSelected
                 ? 'border-primary bg-primary text-primary-foreground'
                 : 'border-transparent bg-secondary text-secondary-foreground hover:brightness-125',
