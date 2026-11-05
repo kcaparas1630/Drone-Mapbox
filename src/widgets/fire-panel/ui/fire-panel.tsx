@@ -22,10 +22,15 @@ function readIsInitiallyOpen(): boolean {
   return typeof window.matchMedia !== 'function' || window.matchMedia(WIDE_SCREEN_QUERY).matches;
 }
 
-export type FirePanelProps = { isOpenByDefault?: boolean; isCompact?: boolean };
+// onOpenChange lets the page make room for the open panel (phone landscape, §4.2).
+export type FirePanelProps = {
+  isOpenByDefault?: boolean;
+  isCompact?: boolean;
+  onOpenChange?: (isOpen: boolean) => void;
+};
 
 // Renders the collapsible panel from the shared feed cache and the ≤ 4 Hz drone snapshot.
-export function FirePanel({ isOpenByDefault, isCompact = false }: FirePanelProps) {
+export function FirePanel({ isOpenByDefault, isCompact = false, onOpenChange }: FirePanelProps) {
   const [isOpen, setIsOpen] = useState(() => isOpenByDefault ?? readIsInitiallyOpen());
   const snapshot = useAppSelector(selectDroneSnapshot);
   const { data: feed } = useFireFeedQuery();
@@ -48,6 +53,7 @@ export function FirePanel({ isOpenByDefault, isCompact = false }: FirePanelProps
         isOpen={isOpen}
         onToggle={() => {
           setIsOpen(!isOpen);
+          onOpenChange?.(!isOpen);
         }}
       />
       <div
