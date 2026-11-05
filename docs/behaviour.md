@@ -119,11 +119,14 @@ and mouse/keyboard devices always get the cockpit of §4.1. The layout follows r
   a small compass; the touch controls stay at the bottom. A notice at the centre says
   "Turn your phone sideways — FireflyBC works best in landscape" with **Continue in portrait**,
   which hides it for the rest of the session. Rotating to landscape removes it.
-- **Landscape:** the §4.1 cockpit at a smaller size. Top: wordmark, search, install icon. Right:
-  fire panel (open, narrower) with the details card under it. Lower left: compass and a compact
-  place/telemetry card (no coordinates). Bottom centre: route banner. The move stick sits in the
-  bottom-left corner and the climb slider at the bottom right of the area left of the fire panel,
-  with Boost between them. The overlay keeps clear of notches (safe-area insets).
+- **Landscape:** the §4.1 cockpit at a smaller size. Top: wordmark, search, install icon and the
+  fire panel, which starts **collapsed** to its "Active fires (N)" header so the flight area uses
+  the full width. Opening it (or selecting a fire) turns the right side into a full-height
+  column, narrower than on desktop, with the details card under the list; collapsing it gives the
+  width back. Lower left: compass and a compact place/telemetry card (no coordinates). Bottom
+  centre: route banner. The move stick sits in the bottom-left corner and the climb slider at the
+  bottom right of the flight area, with Boost between them. The overlay keeps clear of notches
+  (safe-area insets).
 
 ## 5. Search → fly (ADR 008)
 
