@@ -20,6 +20,12 @@ describe('formatFlightValue', () => {
     expect(formatFlightValue('heading', 359.6)).toBe('0° N');
   });
 
+  it('shows climb and descent rates with an up or down arrow', () => {
+    expect(formatFlightValue('verticalSpeed', 42)).toBe('▲ 42 m/s');
+    expect(formatFlightValue('verticalSpeed', -7)).toBe('▼ 7 m/s');
+    expect(formatFlightValue('verticalSpeed', 0)).toBe('0 m/s');
+  });
+
   it('shows a dash for unknown values such as AGL without terrain', () => {
     expect(formatFlightValue('altitude', null)).toBe('—');
     expect(formatFlightValue('speed', Number.NaN)).toBe('—');
