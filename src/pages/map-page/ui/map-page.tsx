@@ -2,13 +2,14 @@
 import { useReducer } from 'react';
 
 import { FirePopup } from '@/widgets/fire-popup';
-import { FireFeedBadge, FlightHud, OfflineBanner } from '@/widgets/hud';
+import { FireFeedBadge, FlightHud, OfflineBanner, PwaControls } from '@/widgets/hud';
 import { Joystick } from '@/widgets/joystick';
 import { INITIAL_MAP_STATUS, MapView, mergeMapStatus } from '@/widgets/map-view';
 import { RouteBanner } from '@/widgets/route-banner';
 import { SearchBar } from '@/widgets/search-bar';
 
 import { useEscapeShortcut } from '../model/use-escape-shortcut';
+import { useReloadOnAuthFailure } from '../model/use-reload-on-auth-failure';
 
 export type MapPageProps = { mapboxToken: string; isDevBuild: boolean };
 
@@ -16,6 +17,7 @@ export type MapPageProps = { mapboxToken: string; isDevBuild: boolean };
 export function MapPage({ mapboxToken, isDevBuild }: MapPageProps) {
   const [mapStatus, patchMapStatus] = useReducer(mergeMapStatus, INITIAL_MAP_STATUS);
   useEscapeShortcut();
+  useReloadOnAuthFailure(mapStatus.isAuthFailed);
   return (
     <main className="relative h-dvh w-full overflow-hidden" aria-label="FireflyBC map">
       <MapView
@@ -37,7 +39,10 @@ export function MapPage({ mapboxToken, isDevBuild }: MapPageProps) {
               <SearchBar mapboxToken={mapboxToken} />
             </div>
             <div className="pointer-events-auto order-3">
-              <FireFeedBadge />
+              <div className="flex flex-col items-end gap-2">
+                <FireFeedBadge />
+                <PwaControls />
+              </div>
             </div>
           </div>
           <div className="flex justify-center">

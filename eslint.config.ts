@@ -139,8 +139,8 @@ export default defineConfig([
     languageOptions: { globals: globals.node },
   },
   {
-    name: 'fireflybc/schemas-mirror-external-payload-keys',
-    files: ['src/**/*.schema.ts'],
+    name: 'fireflybc/schemas-and-configs-mirror-external-keys',
+    files: ['src/**/*.schema.ts', '*.config.ts'],
     rules: { '@typescript-eslint/naming-convention': schemaNamingConventionOptions },
   },
   {

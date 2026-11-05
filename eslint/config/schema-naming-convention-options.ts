@@ -1,4 +1,4 @@
-// Naming options for *.schema.ts: like the default, but object keys may be snake_case to mirror external payloads.
+// Naming options for *.schema.ts and *.config.ts: object keys may be snake_case to mirror external formats.
 import type { Linter } from 'eslint';
 
 import { namingConventionOptions } from './naming-convention-options';
