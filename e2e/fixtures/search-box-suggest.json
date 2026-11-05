@@ -1,0 +1,12 @@
+{
+  "suggestions": [
+    {
+      "name": "Summerland",
+      "mapbox_id": "e2e-fixture-summerland",
+      "feature_type": "place",
+      "place_formatted": "British Columbia, Canada"
+    }
+  ],
+  "attribution": "Test fixture shaped like a Mapbox Search Box response",
+  "response_id": "e2e-fixture"
+}

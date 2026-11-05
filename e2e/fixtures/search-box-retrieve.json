@@ -1,0 +1,18 @@
+{
+  "type": "FeatureCollection",
+  "features": [
+    {
+      "type": "Feature",
+      "geometry": { "type": "Point", "coordinates": [-119.6664, 49.6002] },
+      "properties": {
+        "name": "Summerland",
+        "mapbox_id": "e2e-fixture-summerland",
+        "feature_type": "place",
+        "full_address": "Summerland, British Columbia, Canada",
+        "place_formatted": "British Columbia, Canada",
+        "coordinates": { "longitude": -119.6664, "latitude": 49.6002 }
+      }
+    }
+  ],
+  "attribution": "Test fixture shaped like a Mapbox Search Box response"
+}

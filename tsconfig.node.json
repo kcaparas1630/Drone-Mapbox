@@ -21,10 +21,8 @@
     "vite.config.ts",
     "vitest.config.ts",
     "eslint.config.ts",
-    "playwright.config.ts",
     "commitlint.config.ts",
     "scripts/**/*",
-    "eslint/**/*",
-    "e2e/**/*"
+    "eslint/**/*"
   ]
 }
