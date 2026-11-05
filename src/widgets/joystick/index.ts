@@ -1,2 +1,2 @@
 // Public API of the joystick widget.
-export {};
+export { Joystick } from './ui/joystick';

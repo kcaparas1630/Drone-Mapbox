@@ -3,6 +3,7 @@ import { useReducer } from 'react';
 
 import { FirePopup } from '@/widgets/fire-popup';
 import { FireFeedBadge, FlightHud, OfflineBanner } from '@/widgets/hud';
+import { Joystick } from '@/widgets/joystick';
 import { INITIAL_MAP_STATUS, MapView, mergeMapStatus } from '@/widgets/map-view';
 import { RouteBanner } from '@/widgets/route-banner';
 import { SearchBar } from '@/widgets/search-bar';
@@ -51,6 +52,9 @@ export function MapPage({ mapboxToken, isDevBuild }: MapPageProps) {
           </div>
           <div className="pointer-events-auto flex w-full justify-center">
             <RouteBanner />
+          </div>
+          <div className="pointer-events-auto w-full">
+            <Joystick />
           </div>
         </div>
       </div>
