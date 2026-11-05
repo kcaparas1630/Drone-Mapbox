@@ -1,4 +1,4 @@
-// HUD switch "Show fires that are out": re-queries the fire feed with or without Out fires (behaviour §7).
+// Fire panel switch "Show fires that are out": re-queries the fire feed with or without Out fires (§7.1).
 import { outFiresVisibilityChanged, selectIsOutIncluded } from '@/entities/fire';
 import { useAppDispatch, useAppSelector } from '@/shared/lib/redux';
 
@@ -7,7 +7,7 @@ export function OutFiresToggle() {
   const dispatch = useAppDispatch();
   const isOutIncluded = useAppSelector(selectIsOutIncluded);
   return (
-    <label className="flex min-h-8 cursor-pointer items-center gap-2 rounded-panel border border-panel-border bg-panel px-3 text-xs text-foreground shadow-lg backdrop-blur-md">
+    <label className="flex min-h-8 cursor-pointer items-center gap-2 border-t border-panel-border pt-2 text-xs text-muted-foreground hover:text-foreground">
       <input
         type="checkbox"
         className="size-4 accent-primary"

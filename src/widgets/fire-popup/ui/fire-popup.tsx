@@ -1,5 +1,9 @@
-// Fire popup: shows the selected fire from the feed cache; "Fly here" starts an auto-route to it (behaviour §7).
-import { selectSelectedFireNumber, useFireFeedQuery } from '@/entities/fire';
+// Fire details for the selected fire, shown under the fire list; "Fly here" starts an auto-route (§7, ADR 023).
+import {
+  selectSelectedFireNumber,
+  useFireFeedQuery,
+  useGetFirePerimetersQuery,
+} from '@/entities/fire';
 import { flyToPlace } from '@/features/fly-to-place';
 import { closeFirePopup } from '@/features/select-fire';
 import { useAppDispatch, useAppSelector } from '@/shared/lib/redux';
@@ -11,6 +15,7 @@ export function FirePopup() {
   const dispatch = useAppDispatch();
   const fireNumber = useAppSelector(selectSelectedFireNumber);
   const { data: feed } = useFireFeedQuery();
+  const { data: perimeters } = useGetFirePerimetersQuery(undefined);
   const fire = feed?.fires.find((candidate) => candidate.fireNumber === fireNumber);
   if (feed === undefined || fire === undefined) {
     return null;
@@ -19,6 +24,9 @@ export function FirePopup() {
     <FireDetailsCard
       fire={fire}
       fetchedAtMs={feed.fetchedAtMs}
+      isAreaMapped={
+        perimeters?.some((perimeter) => perimeter.fireNumber === fire.fireNumber) ?? false
+      }
       onClose={() => {
         dispatch(closeFirePopup());
       }}

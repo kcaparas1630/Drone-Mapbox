@@ -1,29 +1,43 @@
 // Fire details card: number, name, status, size, ignition, location, cause, actions and the source disclaimer.
 import { ExternalLink, X } from 'lucide-react';
 
-import { type Fire, FireStatusBadge } from '@/entities/fire';
+import { type Fire, FireStatusBadge, formatFireSize } from '@/entities/fire';
 import { Button, Card } from '@/shared/ui';
 
-import { formatFireSize } from '../lib/format-fire-size';
 import { formatLocalDateTime } from '../lib/format-local-date-time';
+import { FireSourceNote } from './fire-source-note';
 
 export type FireDetailsCardProps = {
   fire: Fire;
   fetchedAtMs: number;
+  isAreaMapped: boolean;
   onClose: () => void;
   onFlyHere: () => void;
 };
 
+const MAPPED_AREA_TEXT = 'Mapped BCWS perimeter';
+const APPROXIMATE_AREA_TEXT = 'Approximate circle of the reported size';
+
 // Renders one fire's details as text only; the BCWS link appears only when it passed the allowlist.
-export function FireDetailsCard({ fire, fetchedAtMs, onClose, onFlyHere }: FireDetailsCardProps) {
+export function FireDetailsCard({
+  fire,
+  fetchedAtMs,
+  isAreaMapped,
+  onClose,
+  onFlyHere,
+}: FireDetailsCardProps) {
   const rows: [string, string][] = [
     ['Size', formatFireSize(fire.sizeHa)],
+    ['Area on map', isAreaMapped ? MAPPED_AREA_TEXT : APPROXIMATE_AREA_TEXT],
     ['Discovered', formatLocalDateTime(fire.ignitionDateMs)],
     ['Location', fire.location ?? 'Not reported'],
     ['Cause', fire.cause ?? 'Not reported'],
   ];
   return (
-    <Card aria-labelledby="fire-popup-title" className="flex w-full max-w-sm flex-col gap-3 p-4">
+    <Card
+      aria-labelledby="fire-popup-title"
+      className="flex w-full shrink-0 flex-col gap-3 p-4 sm:w-80"
+    >
       <header className="flex items-start gap-2">
         <div className="min-w-0 flex-1">
           <p className="text-xs text-muted-foreground">Fire {fire.fireNumber}</p>
@@ -59,10 +73,7 @@ export function FireDetailsCard({ fire, fetchedAtMs, onClose, onFlyHere }: FireD
           </a>
         )}
       </div>
-      <p className="text-[11px] leading-snug text-muted-foreground">
-        Informational only. Source: BC Wildfire Service open data, fetched{' '}
-        {formatLocalDateTime(fetchedAtMs)}. For emergencies follow EmergencyInfoBC.
-      </p>
+      <FireSourceNote fetchedAtMs={fetchedAtMs} />
     </Card>
   );
 }

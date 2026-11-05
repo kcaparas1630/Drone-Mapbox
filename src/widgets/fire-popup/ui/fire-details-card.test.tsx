@@ -23,13 +23,14 @@ const FIRE: Fire = {
 };
 
 // Renders the card with spy callbacks and returns them.
-function renderCard(fire: Fire) {
+function renderCard(fire: Fire, isAreaMapped = false) {
   const onClose = vi.fn();
   const onFlyHere = vi.fn();
   render(
     <FireDetailsCard
       fire={fire}
       fetchedAtMs={Date.UTC(2026, 10, 4)}
+      isAreaMapped={isAreaMapped}
       onClose={onClose}
       onFlyHere={onFlyHere}
     />,
@@ -47,6 +48,16 @@ describe('FireDetailsCard', () => {
     expect(
       screen.getByText(/Informational only\. Source: BC Wildfire Service open data/),
     ).toBeInTheDocument();
+  });
+
+  it('says whether the area on the map is the mapped perimeter or an approximate circle', () => {
+    renderCard(FIRE, true);
+    expect(screen.getByText('Mapped BCWS perimeter')).toBeInTheDocument();
+  });
+
+  it('marks an unmapped area as approximate', () => {
+    renderCard(FIRE);
+    expect(screen.getByText('Approximate circle of the reported size')).toBeInTheDocument();
   });
 
   it('links to BCWS in a new tab without opener or referrer', () => {

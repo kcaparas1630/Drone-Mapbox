@@ -1,4 +1,4 @@
-// Fire feed badge: "Fires: N · updated 4 min ago", amber/red when stale, "unavailable" when failing (§7).
+// Fire feed badge in the fire panel: "Fires: N · updated 4 min ago", amber/red when stale (§7, §7.1).
 import { Flame } from 'lucide-react';
 
 import { useFireFeedQuery } from '@/entities/fire';
@@ -21,8 +21,8 @@ export function FireFeedBadge() {
     isError,
   });
   return (
-    <div role="status" aria-live="polite" className="flex flex-col items-end gap-1">
-      <Badge tone={BADGE_TONES[freshness.tone]} className="min-h-8 px-3">
+    <div role="status" aria-live="polite" className="flex flex-col items-start gap-1">
+      <Badge tone={BADGE_TONES[freshness.tone]} className="min-h-7 px-2.5">
         <Flame aria-hidden="true" className="size-3.5" />
         {freshness.label}
       </Badge>
