@@ -123,10 +123,12 @@ and mouse/keyboard devices always get the cockpit of §4.1. The layout follows r
   fire panel, which starts **collapsed** to its "Active fires (N)" header so the flight area uses
   the full width. Opening it (or selecting a fire) turns the right side into a full-height
   column, narrower than on desktop, with the details card under the list; collapsing it gives the
-  width back. Lower left: compass and a compact place/telemetry card (no coordinates). Bottom
-  centre: route banner. The move stick sits in the bottom-left corner and the climb slider at the
-  bottom right of the flight area, with Boost between them. The overlay keeps clear of notches
-  (safe-area insets).
+  width back. Everything else sits in **one bottom bar**, so the middle of the screen stays clear:
+  the move stick in the bottom-left corner, the compass and a compact place/telemetry card (no
+  coordinates) centred between the sticks, then Boost and the climb slider at the bottom right of
+  the flight area. When the bar is too narrow for the card (small phone with the fire list open),
+  only the compass shows. The route banner sits just above the bar. The overlay keeps clear of
+  notches (safe-area insets).
 
 ## 5. Search → fly (ADR 008)
 

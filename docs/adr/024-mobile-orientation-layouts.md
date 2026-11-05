@@ -32,7 +32,9 @@ Landscape:
    right, nav cluster lower left, route banner bottom centre), compact sizes, and the touch sticks
    along the bottom. The fire panel starts collapsed to its header in the top row; only while it
    is open (or a fire is selected) does it take a full-height column and narrow the flight area.
-   A permanently open column left the flight area too cramped (owner feedback).
+   A permanently open column left the flight area too cramped (owner feedback). The compass and
+   telemetry sit in one bottom bar between the sticks (as drone-controller apps do), not stacked
+   above the move stick, which crowded the left edge (owner feedback).
 2. A bottom sheet for the fire list: hides fires behind a gesture; the panel is the point of the app.
 
 ## Decision
