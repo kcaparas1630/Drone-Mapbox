@@ -28,7 +28,7 @@ export default defineConfig({
   projects: [
     {
       name: 'dev-server',
-      testMatch: ['search-to-fly.spec.ts', 'fire-popup.spec.ts'],
+      testMatch: ['search-to-fly.spec.ts', 'fire-popup.spec.ts', 'chase-camera.spec.ts'],
       use: { baseURL: DEV_URL },
     },
     {
