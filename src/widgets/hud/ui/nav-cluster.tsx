@@ -11,7 +11,7 @@ import { computeFireBlips } from '../lib/compute-fire-blips';
 import { CompassRose } from './compass-rose';
 import { NavReadoutCard } from './nav-readout-card';
 
-// full: the desktop cluster; compact: smaller, no coordinates (phone landscape); compass: the rose only (phone portrait).
+// full: desktop; compact: fills its slot, no coordinates, card hidden when narrow (landscape bar); compass: rose only.
 export type NavClusterVariant = 'full' | 'compact' | 'compass';
 
 export type NavClusterProps = { mapboxToken: string; variant?: NavClusterVariant };
@@ -36,7 +36,12 @@ export function NavCluster({ mapboxToken, variant = 'full' }: NavClusterProps) {
   return (
     <section
       aria-label="Navigation"
-      className={cn('flex items-end', isCompact ? 'gap-2' : 'gap-3')}
+      className={cn(
+        'flex items-end',
+        variant === 'compact' ? '@container w-full justify-center gap-2' : '',
+        variant === 'compass' ? 'gap-2' : '',
+        variant === 'full' ? 'gap-3' : '',
+      )}
     >
       <CompassRose headingDeg={snapshot?.headingDeg ?? null} blips={blips} isCompact={isCompact} />
       {isCompassOnly ? null : (

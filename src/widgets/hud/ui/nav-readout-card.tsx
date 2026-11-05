@@ -14,14 +14,14 @@ export type NavReadoutCardProps = {
   isCompact: boolean;
 };
 
-// Renders the place, coordinates (hidden when compact or narrow) and the four telemetry readouts.
+// Renders the place, coordinates and four readouts; compact drops coordinates, and the card in a narrow slot.
 export function NavReadoutCard({ snapshot, placeName, isCompact }: NavReadoutCardProps) {
   const altitudeAgl = snapshot === null || snapshot.isTerrainMissing ? null : snapshot.altitudeAgl;
   return (
     <div
       className={cn(
         'flex min-w-0 flex-col rounded-panel border border-panel-border bg-panel shadow-xl backdrop-blur-md',
-        isCompact ? 'max-w-60 gap-1.5 p-2' : 'max-w-72 gap-2 p-3',
+        isCompact ? 'max-w-60 gap-1.5 p-2 @max-[17rem]:hidden' : 'max-w-72 gap-2 p-3',
       )}
     >
       <div className="min-w-0">
