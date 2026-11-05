@@ -12,6 +12,10 @@ describe('computeTerrainFloor', () => {
     expect(computeTerrainFloor([null, 800, null, null])).toBe(830);
   });
 
+  it('uses a larger clearance when one is given, as the auto-route safety net does', () => {
+    expect(computeTerrainFloor([400, 900], 300)).toBe(1200);
+  });
+
   it('returns null when every sample is missing', () => {
     expect(computeTerrainFloor([null, null, null, null])).toBeNull();
   });

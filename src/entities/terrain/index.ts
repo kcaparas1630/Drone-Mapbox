@@ -1,8 +1,9 @@
-// Public API of the terrain entity: null-safe DEM sampling and the altitude rules built on it.
+// Public API of the terrain entity: null-safe DEM sampling, corridor DEM tiles and the altitude rules on them.
+export { loadDemTiles } from './api/load-dem-tiles';
 export { sampleTerrainAhead } from './api/sample-terrain-ahead';
 export { sampleTerrainElevation } from './api/sample-terrain-elevation';
+export { computeDemTileRange } from './lib/compute-dem-tile-range';
+export { createElevationSampler } from './lib/create-elevation-sampler';
 export { easeAltitude } from './lib/ease-altitude';
 export { computeTerrainFloor } from './lib/compute-terrain-floor';
-export { updateFollowTarget } from './lib/update-follow-target';
-export { createTerrainFollowState } from './model/terrain-follow-state';
-export type { TerrainFollowState } from './model/terrain-follow-state';
+export type { DemTile, DemTileRange } from './model/dem-tile.types';
