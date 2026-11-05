@@ -26,7 +26,8 @@ A name must tell the reader what the thing is responsible for, without opening i
   publish subscribe emit dispatch resolve throttle debounce ensure assert serialize deserialize
   encode decode open close show hide toggle enable disable add remove insert delete clear merge
   split join project unproject scale rotate translate ease interpolate lerp move fly pause resume
-  cancel arrive run report track measure describe` (edit the list in a PR, with reason).
+  cancel arrive run report track measure describe reserve` (edit the list in a PR, with reason;
+  `reserve` was added for request budgets that set capacity aside before a call, ADR 025).
 - Acronyms keep their case: `fetchBCWildfireData`, `toMSLAltitude`. Hooks: `useX`. React
   components: `PascalCase` noun. Redux selectors: `selectX`. Thunks: verb phrase (`flyToPlace`).
 - Booleans: `is/has/can/should` prefix. Event handlers: `handleX` (component) / `onX` (prop).
