@@ -2,19 +2,10 @@
 import { cn } from '@/shared/ui';
 
 import { FIRE_STATUS_PALETTE } from '../config/fire-status-palette';
+import { FIRE_STATUS_SWATCH_CLASSES } from '../config/fire-status-swatch-classes';
 import type { FireStatus } from '../model/fire.types';
 
 export type FireStatusBadgeProps = { status: FireStatus; rawStatus: string; className?: string };
-
-const SWATCH_CLASS_BY_STATUS: Readonly<Record<FireStatus, string>> = {
-  'Out of Control': 'bg-fire-out-of-control',
-  'Being Held': 'bg-fire-being-held',
-  'Under Control': 'bg-fire-under-control',
-  New: 'bg-fire-new',
-  'Fire of Note': 'bg-fire-out-of-control ring-2 ring-white',
-  Out: 'bg-muted-foreground',
-  Unknown: 'bg-fire-unknown',
-};
 
 // Renders the status colour swatch and the status text; unknown statuses show the raw BCWS text.
 export function FireStatusBadge({ status, rawStatus, className }: FireStatusBadgeProps) {
@@ -29,7 +20,7 @@ export function FireStatusBadge({ status, rawStatus, className }: FireStatusBadg
     >
       <span
         aria-hidden="true"
-        className={cn('size-2.5 rounded-full', SWATCH_CLASS_BY_STATUS[status])}
+        className={cn('size-2.5 rounded-full', FIRE_STATUS_SWATCH_CLASSES[status])}
       />
       {label}
     </span>
