@@ -1,4 +1,4 @@
-// Draws the active route as a great-circle line on the map, faded and dashed while paused (behaviour §6.4).
+// Draws the active route on the map: the planned path once ready, else the great circle; faded when paused (§6).
 import type { GeoJSONSource, Map as MapboxMap } from 'mapbox-gl';
 import { useEffect } from 'react';
 
@@ -18,7 +18,12 @@ function ensureRouteLayer(map: MapboxMap): GeoJSONSource | undefined {
       type: 'line',
       source: MAP_STYLE.ROUTE_SOURCE_ID,
       layout: { 'line-cap': 'round', 'line-join': 'round' },
-      paint: { 'line-color': '#ff8a2a', 'line-width': 4, 'line-opacity': 0.9 },
+      paint: {
+        'line-color': '#ff8a2a',
+        'line-width': ['interpolate', ['linear'], ['zoom'], 6, 3, 14, 6],
+        'line-opacity': 0.9,
+        'line-blur': 0.5,
+      },
     });
   }
   return map.getSource<GeoJSONSource>(MAP_STYLE.ROUTE_SOURCE_ID);
@@ -39,15 +44,24 @@ export function useRouteLine(map: MapboxMap | null): void {
       source?.setData(EMPTY_LINE);
       return;
     }
-    const { destination } = plan;
+    const { destination, path } = plan;
     source?.setData(
-      buildRouteLine(
-        plan.originLng,
-        plan.originLat,
-        destination.lng,
-        destination.lat,
-        plan.distanceM,
-      ),
+      path === null
+        ? buildRouteLine(
+            plan.originLng,
+            plan.originLat,
+            destination.lng,
+            destination.lat,
+            plan.distanceM,
+          )
+        : {
+            type: 'Feature',
+            properties: {},
+            geometry: {
+              type: 'LineString',
+              coordinates: path.lngs.map((lng, index) => [lng, path.lats[index] ?? 0]),
+            },
+          },
     );
     map.setPaintProperty(MAP_STYLE.ROUTE_LAYER_ID, 'line-opacity', isPaused ? 0.35 : 0.9);
     map.setPaintProperty(MAP_STYLE.ROUTE_LAYER_ID, 'line-dasharray', isPaused ? [2, 2] : [1, 0]);

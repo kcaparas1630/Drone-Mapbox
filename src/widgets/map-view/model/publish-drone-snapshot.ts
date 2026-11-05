@@ -1,6 +1,8 @@
-// Copies the simulation into Redux for the HUD at most 4 times a second, skipping unchanged values (ADR 011).
+// Copies the simulation into Redux for the HUD and route banner ≤ 4 times a second, skipping unchanged values.
 import { droneSnapshotPublished, type SimWorld } from '@/entities/drone';
 import { toDegrees } from '@/shared/lib/geo';
+
+const ROUTE_DISTANCE_STEP_M = 100;
 
 let lastPublishedKey = '';
 
@@ -20,6 +22,9 @@ export function publishDroneSnapshot(store: AppStore, world: SimWorld, nowMs: nu
     isAtBcEdge: world.isAtBcEdge,
     isAtCeiling: world.isAtCeiling,
     isTerrainMissing,
+    routeRemainingM:
+      Math.round(world.route.remainingM / ROUTE_DISTANCE_STEP_M) * ROUTE_DISTANCE_STEP_M,
+    routeRemainingS: Math.max(0, Math.ceil(world.route.durationS - world.route.elapsedS)),
     publishedAtMs: nowMs,
   };
   const key = [
@@ -33,6 +38,8 @@ export function publishDroneSnapshot(store: AppStore, world: SimWorld, nowMs: nu
     snapshot.isAtBcEdge,
     snapshot.isAtCeiling,
     isTerrainMissing,
+    snapshot.routeRemainingM,
+    snapshot.routeRemainingS,
   ].join('|');
   if (key === lastPublishedKey) {
     return;

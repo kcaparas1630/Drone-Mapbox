@@ -1,23 +1,47 @@
-// Starts per-frame progress for a newly planned route from the drone's exact position, so it never jumps.
+// Starts per-frame progress for a new route from the drone's exact position on the great circle (§6.1, ADR 022).
 import type { SimWorld } from '@/entities/drone';
-import { computeTripDuration, type RoutePlan } from '@/entities/route';
-import type { TerrainFollowState } from '@/entities/terrain';
-import { computeHaversineDistance, computeInitialBearing } from '@/shared/lib/geo';
+import { computeEnvelopeAltitude, computeTripDuration, type RoutePlan } from '@/entities/route';
+import { ROUTE_TUNING } from '@/shared/config';
+import {
+  computeDestinationPoint,
+  computeHaversineDistance,
+  computeInitialBearing,
+  type GeoPoint,
+} from '@/shared/lib/geo';
 
-// Re-plans the route from the world's position to the plan's destination and resets the altitude target.
-export function startRouteProgress(
-  world: SimWorld,
-  plan: RoutePlan,
-  terrainFollow: TerrainFollowState,
-): void {
+const scratchPoint: GeoPoint = { lng: 0, lat: 0 };
+
+// Writes the great circle to the destination into the world's path buffers with the envelope profile.
+export function startRouteProgress(world: SimWorld, plan: RoutePlan): void {
   const { destination } = plan;
+  const { route } = world;
   const distanceM = computeHaversineDistance(
     world.lng,
     world.lat,
     destination.lng,
     destination.lat,
   );
-  const { route } = world;
+  const bearingRad = computeInitialBearing(world.lng, world.lat, destination.lng, destination.lat);
+  const pointCount = Math.min(
+    ROUTE_TUNING.MAX_PATH_POINTS,
+    Math.max(
+      ROUTE_TUNING.MIN_PATH_POINTS,
+      Math.ceil(distanceM / ROUTE_TUNING.PATH_POINT_SPACING_M) + 1,
+    ),
+  );
+  for (let index = 0; index < pointCount; index += 1) {
+    const alongM = (distanceM * index) / (pointCount - 1);
+    computeDestinationPoint(scratchPoint, world.lng, world.lat, bearingRad, alongM);
+    route.pathLngs[index] = scratchPoint.lng;
+    route.pathLats[index] = scratchPoint.lat;
+    route.pathDistancesM[index] = alongM;
+    route.pathAltitudesMsl[index] = computeEnvelopeAltitude(
+      alongM,
+      distanceM,
+      world.altitudeMsl,
+      world.altitudeMsl,
+    );
+  }
   route.routeId = plan.routeId;
   route.elapsedS = 0;
   route.distanceM = distanceM;
@@ -26,12 +50,9 @@ export function startRouteProgress(
   route.originLat = world.lat;
   route.destinationLng = destination.lng;
   route.destinationLat = destination.lat;
-  route.initialBearingRad = computeInitialBearing(
-    world.lng,
-    world.lat,
-    destination.lng,
-    destination.lat,
-  );
-  terrainFollow.targetMsl = world.altitudeMsl;
-  terrainFollow.allMissingS = 0;
+  route.initialBearingRad = bearingRad;
+  route.pathCount = pointCount;
+  route.segmentIndex = 0;
+  route.adoptedPath = null;
+  route.remainingM = distanceM;
 }
