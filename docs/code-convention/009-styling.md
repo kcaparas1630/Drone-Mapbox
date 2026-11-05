@@ -3,6 +3,8 @@
 ## Rules
 
 - Tailwind v4 utility classes. Design tokens in `src/app/styles/globals.css` under `@theme`.
+- Overlay theme is Canopy (ADR 023): forest-green panels, amber (`--color-primary`) as the only
+  accent. Status colour lives on dots, footprints and flames, never on panel backgrounds.
 - shadcn/ui components are copied into `src/shared/ui/<component>.tsx` and edited there; do not
   wrap them in another component just to restyle.
 - `cn()` from `@/shared/ui/cn` for conditional classes; class order is Prettier's job.

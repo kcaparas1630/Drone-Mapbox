@@ -6,7 +6,7 @@
 |---|---|---|---|
 | Unit | Vitest | physics step, geodesic planning, terrain-follow controller, bounds clamp, zod schemas, normalisers, selectors, reducers, local ESLint rules | `*.test.ts` beside the source |
 | Component | Vitest + Testing Library + jsdom | HUD, route banner, fire popup, search wrapper (SearchBox mocked) | beside the source |
-| E2E smoke | Playwright, Chromium with SwiftShader flags | app loads and map canvas appears; search → mode becomes `autoRoute`; fire popup opens from a seeded fixture; manifest served | `e2e/*.spec.ts` |
+| E2E smoke | Playwright, Chromium with SwiftShader flags | app loads and map canvas appears; search → mode becomes `autoRoute`; fire popup opens from a seeded fixture; manifest served; the rendered camera stays on the chase-camera pose in flight | `e2e/*.spec.ts` |
 
 - Every file in `src/entities/*/{lib,model}/**` and `src/shared/lib/**` has a sibling
   `*.test.ts`. Coverage threshold for those paths: 90 % lines, 85 % branches.

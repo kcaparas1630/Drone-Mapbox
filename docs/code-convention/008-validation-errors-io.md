@@ -8,6 +8,9 @@
 - All network calls go through `shared/api/fetch-json.ts`:
   `fetchJson(url, schema, { signal, timeoutMs = 10_000, maxBytes = 10 MB })` — the schema argument
   is mandatory, so unvalidated JSON cannot exist. RTK Query's `baseQuery` wraps the same function.
+  The one binary exception is `shared/api/fetch-image-bitmap.ts` for DEM tiles (ADR 022): same
+  timeout, size cap and content-type check, returns a decoded `ImageBitmap`; callers range-check
+  every value they decode from it.
 - `localStorage` is accessed only through `shared/lib/storage/read-versioned-item.ts` /
   `write-versioned-item.ts`, which take a schema.
 - Boundary functions return `Result<T, E>` from `shared/lib/result.ts` or throw a typed error

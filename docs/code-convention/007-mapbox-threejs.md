@@ -18,8 +18,8 @@
 - Geo maths lives in `shared/lib/geo/*.ts` (haversine, bearing, destination point, mercator scale).
   No trigonometry in widgets or features.
 - Map is created with `projection: 'mercator'`, `performanceMetricsCollection: false`,
-  `maxBounds: BC_BBOX_PADDED`, drag-pan/scroll-zoom/rotate handlers disabled; the chase camera owns
-  the view via `map.setFreeCameraOptions`.
+  no `maxBounds` (it bounces the free camera on terrain, ADR 020), drag-pan/scroll-zoom/rotate
+  handlers disabled; the chase camera owns the view via `map.setFreeCameraOptions`.
 - Units: metres and radians inside the sim; degrees and lng/lat only at module edges.
 
 ## Enforcement
