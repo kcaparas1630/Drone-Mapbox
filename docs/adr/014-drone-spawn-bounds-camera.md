@@ -1,6 +1,6 @@
 # ADR 014 — Spawn at last saved position (else BC centre), soft-clamped to BC; chase cam
 
-Status: Accepted (2026-11-04)
+Status: Accepted (2026-11-04); map `maxBounds` amended by ADR 020 (proposed)
 
 ## Options considered
 

@@ -25,6 +25,10 @@ without new information. Status values: `Accepted`, `Superseded by NNN`, `Deprec
 | [017](017-no-monitoring-mvp.md) | No error monitoring or analytics in MVP | Accepted |
 | [018](018-documentation-structure.md) | docs/adr + docs/code-convention, documentation before code | Accepted |
 | [019](019-search-box-core-debounced-combobox.md) | Search Box API via search-js-core with a 300 ms debounced combobox (amends 008) | Proposed |
+| [020](020-no-map-max-bounds.md) | No map `maxBounds`; it bounces the chase camera on terrain, the BC soft clamp bounds the view (amends 014) | Proposed |
+| [021](021-cockpit-ux-satellite-fire-list.md) | Cockpit UX: satellite basemap, nav cluster with compass and place name, fire list | Proposed |
+| [022](022-terrain-aware-route-profile.md) | Auto-route: terrain-aware curved path and a planned climb–cruise–descent profile (amends 007) | Proposed |
+| [023](023-fire-scene-perimeters-flames-canopy.md) | Fire scene: scorched perimeters, status-scaled flames, select-then-fly; Canopy theme (amends 015) | Proposed |
 
 ## Writing a new ADR
 

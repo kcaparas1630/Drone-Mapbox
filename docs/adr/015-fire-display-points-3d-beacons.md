@@ -1,6 +1,6 @@
 # ADR 015 — Fires as hit-test points plus status-coloured 3D beacons
 
-Status: Accepted (2026-11-04)
+Status: Accepted (2026-11-04); beacons replaced by perimeters and flames in ADR 023 (proposed)
 
 ## Options considered
 
