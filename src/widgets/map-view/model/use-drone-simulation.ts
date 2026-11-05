@@ -15,26 +15,29 @@ import { registerSimulationLifecycle } from './register-simulation-lifecycle';
 import { resetDroneLayer } from './reset-drone-layer';
 import { runFrameLoop } from './run-frame-loop';
 
+export type DroneSimulationOptions = {
+  spawn: DroneSpawn;
+  isDevBuild: boolean;
+  fires: readonly Fire[] | undefined;
+  isReducedDetail: boolean;
+};
+
 // Starts the simulation once the map is ready and tears everything down on unmount.
-export function useDroneSimulation(
-  map: MapboxMap | null,
-  spawn: DroneSpawn,
-  isDevBuild: boolean,
-  fires: readonly Fire[] | undefined,
-): void {
+export function useDroneSimulation(map: MapboxMap | null, options: DroneSimulationOptions): void {
+  const { spawn, isDevBuild, fires, isReducedDetail } = options;
   const store = useAppStore();
   const isReducedMotion = usePrefersReducedMotion();
   const contextRef = useRef<FrameLoopContext | null>(null);
   const spawnRef = useRef(spawn);
-  const isReducedMotionRef = useRef(isReducedMotion);
+  const loopFlagsRef = useRef({ isReducedMotion, isReducedDetail });
   const firesRef = useRef(fires);
   useKeyboardDroneControls();
   useEffect(() => {
-    isReducedMotionRef.current = isReducedMotion;
+    loopFlagsRef.current = { isReducedMotion, isReducedDetail };
     if (contextRef.current !== null) {
-      contextRef.current.flags.isReducedMotion = isReducedMotion;
+      Object.assign(contextRef.current.flags, loopFlagsRef.current);
     }
-  }, [isReducedMotion]);
+  }, [isReducedMotion, isReducedDetail]);
   useEffect(() => {
     firesRef.current = fires;
     if (contextRef.current !== null) {
@@ -47,7 +50,7 @@ export function useDroneSimulation(
       return undefined;
     }
     const context = createFrameLoopContext(map, createSimWorld(spawnRef.current), store);
-    context.flags.isReducedMotion = isReducedMotionRef.current;
+    Object.assign(context.flags, loopFlagsRef.current);
     context.fireBeacons.fires = firesRef.current ?? [];
     context.fireBeacons.version = 1;
     contextRef.current = context;

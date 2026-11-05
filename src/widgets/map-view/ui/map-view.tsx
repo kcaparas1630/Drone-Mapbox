@@ -1,4 +1,4 @@
-// The map widget: one full-screen Mapbox map with terrain, the flying drone and status overlays.
+// The map widget: one full-screen Mapbox map with terrain, the flying drone, status overlays and the low-end fallback.
 import { useRef, useState } from 'react';
 
 import { loadSavedDroneState, restoreDroneSpawn } from '@/entities/drone';
@@ -10,6 +10,7 @@ import { useActiveFireFeed } from '../model/use-active-fire-feed';
 import { useDroneSimulation } from '../model/use-drone-simulation';
 import type { FireHover } from '../model/fire-hover.types';
 import { useFirePointsLayer } from '../model/use-fire-points-layer';
+import { useLowFrameRateFallback } from '../model/use-low-frame-rate-fallback';
 import { useMapboxMap } from '../model/use-mapbox-map';
 import { useRouteLine } from '../model/use-route-line';
 import { FireTooltip } from './fire-tooltip';
@@ -45,7 +46,8 @@ export function MapView({ mapboxToken, isDevBuild, status, onStatusPatch }: MapV
     centreLat: spawn.lat,
     onStatusPatch,
   });
-  useDroneSimulation(map, spawn, isDevBuild, fires);
+  useDroneSimulation(map, { spawn, isDevBuild, fires, isReducedDetail: status.isReducedDetail });
+  useLowFrameRateFallback(map, onStatusPatch);
   useRouteLine(map);
   useFirePointsLayer(map, fires, setFireHover);
   return (
