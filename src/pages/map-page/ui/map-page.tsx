@@ -3,6 +3,7 @@ import { useReducer } from 'react';
 
 import { INITIAL_MAP_STATUS, MapView, mergeMapStatus } from '@/widgets/map-view';
 import { RouteBanner } from '@/widgets/route-banner';
+import { SearchBar } from '@/widgets/search-bar';
 
 import { useEscapeShortcut } from '../model/use-escape-shortcut';
 
@@ -21,7 +22,11 @@ export function MapPage({ mapboxToken, isDevBuild }: MapPageProps) {
         onStatusPatch={patchMapStatus}
       />
       <div className="pointer-events-none absolute inset-0 z-10 flex flex-col justify-between gap-2 p-2 sm:p-4">
-        <div className="flex items-start justify-between gap-2" />
+        <div className="flex items-start justify-center gap-2">
+          <div className="pointer-events-auto flex w-full justify-center">
+            <SearchBar mapboxToken={mapboxToken} />
+          </div>
+        </div>
         <div className="flex flex-col items-center gap-2 pb-8 sm:pb-6">
           <div className="pointer-events-auto flex w-full justify-center">
             <RouteBanner />

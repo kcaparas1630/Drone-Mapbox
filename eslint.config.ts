@@ -15,6 +15,7 @@ import tseslint from 'typescript-eslint';
 import { fsdBoundaries } from './eslint/config/fsd-boundaries';
 import { fsdPathOverrides } from './eslint/config/fsd-path-overrides';
 import { namingConventionOptions } from './eslint/config/naming-convention-options';
+import { schemaNamingConventionOptions } from './eslint/config/schema-naming-convention-options';
 import { localRules } from './eslint/local-rules/local-rules';
 
 const REPO_ROOT = fileURLToPath(new URL('.', import.meta.url));
@@ -136,6 +137,11 @@ export default defineConfig([
     name: 'fireflybc/node-side',
     files: NODE_FILES,
     languageOptions: { globals: globals.node },
+  },
+  {
+    name: 'fireflybc/schemas-mirror-external-payload-keys',
+    files: ['src/**/*.schema.ts'],
+    rules: { '@typescript-eslint/naming-convention': schemaNamingConventionOptions },
   },
   {
     name: 'fireflybc/scripts-may-print',
