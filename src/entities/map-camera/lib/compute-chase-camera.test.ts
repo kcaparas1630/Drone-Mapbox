@@ -29,12 +29,19 @@ function computePose(input: ChaseCameraInput) {
 }
 
 describe('computeChaseCamera', () => {
-  it('sits 60 m behind and 25 m above a drone heading north and looks at the drone', () => {
+  it('sits 60 m behind and 25 m above a drone heading north and looks 40 m ahead of it', () => {
     const pose = computePose(buildInput());
     expect((53.92 - pose.lat) * METERS_PER_DEGREE_LAT).toBeCloseTo(60, 0);
     expect(pose.lng).toBeCloseTo(-122.75, 9);
     expect(pose.altitudeMsl).toBeCloseTo(1025, 6);
-    expect(pose).toMatchObject({ lookAtLng: -122.75, lookAtLat: 53.92, lookAtAltitudeMsl: 1000 });
+    expect((pose.lookAtLat - 53.92) * METERS_PER_DEGREE_LAT).toBeCloseTo(40, 0);
+    expect(pose.lookAtLng).toBeCloseTo(-122.75, 9);
+    expect(pose.lookAtAltitudeMsl).toBe(1000);
+  });
+
+  it('pushes the look-at point further ahead as the camera pulls back', () => {
+    const fast = computePose(buildInput({ speedRatio: 1 }));
+    expect((fast.lookAtLat - 53.92) * METERS_PER_DEGREE_LAT).toBeCloseTo(80, 0);
   });
 
   it('pulls back proportionally to speed and to the follow distance', () => {
