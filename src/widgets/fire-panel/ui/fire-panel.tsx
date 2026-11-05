@@ -1,5 +1,4 @@
 // Right-hand fire panel: feed freshness, status chips, fires nearest first, and the Out toggle (§7.1).
-import { ChevronDown, Flame } from 'lucide-react';
 import { useMemo, useState } from 'react';
 
 import { selectDroneSnapshot } from '@/entities/drone';
@@ -12,6 +11,7 @@ import { filterFiresByStatus } from '../lib/filter-fires-by-status';
 import { useStatusFilter } from '../model/use-status-filter';
 import { FireFeedBadge } from './fire-feed-badge';
 import { FireList } from './fire-list';
+import { FirePanelHeader } from './fire-panel-header';
 import { FireStatusChips } from './fire-status-chips';
 import { OutFiresToggle } from './out-fires-toggle';
 
@@ -43,24 +43,13 @@ export function FirePanel({ isOpenByDefault, isCompact = false }: FirePanelProps
         isCompact ? '' : 'sm:w-80',
       )}
     >
-      <button
-        type="button"
-        aria-expanded={isOpen}
-        aria-controls="fire-panel-body"
-        onClick={() => {
+      <FirePanelHeader
+        fireCount={sorted.length}
+        isOpen={isOpen}
+        onToggle={() => {
           setIsOpen(!isOpen);
         }}
-        className="flex min-h-11 items-center gap-2 px-3 py-2 text-left"
-      >
-        <Flame aria-hidden="true" className="size-4 text-primary" />
-        <span className="flex-1 text-sm font-semibold">
-          Active fires <span className="text-muted-foreground">({sorted.length})</span>
-        </span>
-        <ChevronDown
-          aria-hidden="true"
-          className={cn('size-4 transition-transform', isOpen ? 'rotate-180' : '')}
-        />
-      </button>
+      />
       <div
         id="fire-panel-body"
         hidden={!isOpen}
@@ -70,7 +59,12 @@ export function FirePanel({ isOpenByDefault, isCompact = false }: FirePanelProps
         )}
       >
         <FireFeedBadge />
-        <FireStatusChips filters={chips} selectedId={filterId} onSelect={setFilterId} />
+        <FireStatusChips
+          filters={chips}
+          selectedId={filterId}
+          isCompact={isCompact}
+          onSelect={setFilterId}
+        />
         <FireList
           fires={
             selectedFilter === undefined ? sorted : filterFiresByStatus(sorted, selectedFilter)

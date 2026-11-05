@@ -7,12 +7,22 @@ export type FireStatusChipsProps = {
   filters: readonly { filter: FireStatusFilter; count: number }[];
   selectedId: FireStatusFilterId;
   onSelect: (id: FireStatusFilterId) => void;
+  isCompact?: boolean;
 };
 
-// Renders the chips as a group of toggle buttons.
-export function FireStatusChips({ filters, selectedId, onSelect }: FireStatusChipsProps) {
+// Renders the chips as a group of toggle buttons; compact keeps them on one row that scrolls sideways.
+export function FireStatusChips({
+  filters,
+  selectedId,
+  onSelect,
+  isCompact = false,
+}: FireStatusChipsProps) {
   return (
-    <div role="group" aria-label="Filter fires by status" className="flex flex-wrap gap-1.5">
+    <div
+      role="group"
+      aria-label="Filter fires by status"
+      className={cn('flex gap-1.5', isCompact ? 'shrink-0 overflow-x-auto' : 'flex-wrap')}
+    >
       {filters.map(({ filter, count }) => {
         const isSelected = filter.id === selectedId;
         return (
@@ -24,7 +34,7 @@ export function FireStatusChips({ filters, selectedId, onSelect }: FireStatusChi
               onSelect(filter.id);
             }}
             className={cn(
-              'inline-flex min-h-7 items-center gap-1 rounded-full border px-2.5 text-[11px] font-semibold transition-colors',
+              'inline-flex min-h-7 shrink-0 items-center gap-1 rounded-full border px-2.5 text-[11px] font-semibold transition-colors',
               isSelected
                 ? 'border-primary bg-primary text-primary-foreground'
                 : 'border-transparent bg-secondary text-secondary-foreground hover:brightness-125',
