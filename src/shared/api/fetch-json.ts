@@ -1,41 +1,15 @@
-// The only network entry point: fetches JSON with timeout, size cap and content-type check, then zod (008).
+// The JSON network entry point: fetches with timeout, size cap and content-type check, then zod (008).
 import type { z } from 'zod';
 
 import type { Result } from '../lib/result';
-import type { FetchJsonError, FetchJsonErrorKind, FetchJsonOptions } from './fetch-json.types';
+import type { FetchJsonError, FetchJsonOptions } from './fetch-json.types';
+import { fetchResponse } from './fetch-response';
 import { readBodyWithLimit } from './read-body-with-limit';
+import { toFetchFailure as toFailure } from './to-fetch-failure';
 
 const DEFAULT_TIMEOUT_MS = 10_000;
 const DEFAULT_MAX_BYTES = 10 * 1024 * 1024;
 const MAX_REPORTED_ISSUES = 3;
-
-// Builds the failed Result for one error kind.
-function toFailure(kind: FetchJsonErrorKind, message: string, status: number | null = null) {
-  return { isOk: false, error: { kind, message, status } } as const;
-}
-
-// Requests the URL and maps network, timeout and abort failures to typed errors.
-async function fetchResponse(
-  url: string,
-  signal: AbortSignal | undefined,
-  timeoutMs: number,
-): Promise<Result<Response, FetchJsonError>> {
-  const timeoutSignal = AbortSignal.timeout(timeoutMs);
-  const combinedSignal =
-    signal === undefined ? timeoutSignal : AbortSignal.any([signal, timeoutSignal]);
-  try {
-    const response = await fetch(url, { signal: combinedSignal, credentials: 'omit' });
-    return { isOk: true, value: response };
-  } catch (error) {
-    if (signal?.aborted === true) {
-      return toFailure('aborted', 'The request was cancelled.');
-    }
-    if (timeoutSignal.aborted) {
-      return toFailure('timeout', `No response within ${String(timeoutMs)} ms.`);
-    }
-    return toFailure('network', error instanceof Error ? error.message : String(error));
-  }
-}
 
 // Fetches a URL and returns the schema-validated JSON body, or a typed, serialisable error.
 export async function fetchJson<Schema extends z.ZodType>(
