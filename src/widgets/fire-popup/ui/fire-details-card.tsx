@@ -19,6 +19,17 @@ export type FireDetailsCardProps = {
 const MAPPED_AREA_TEXT = 'Mapped BCWS perimeter';
 const APPROXIMATE_AREA_TEXT = 'Approximate circle of the reported size';
 
+// Returns the label/value rows of the details list, in display order.
+function buildDetailRows(fire: Fire, isAreaMapped: boolean): [string, string][] {
+  return [
+    ['Size', formatFireSize(fire.sizeHa)],
+    ['Area on map', isAreaMapped ? MAPPED_AREA_TEXT : APPROXIMATE_AREA_TEXT],
+    ['Discovered', formatLocalDateTime(fire.ignitionDateMs)],
+    ['Location', fire.location ?? 'Not reported'],
+    ['Cause', fire.cause ?? 'Not reported'],
+  ];
+}
+
 // Renders one fire's details as text only; the BCWS link appears only when it passed the allowlist.
 export function FireDetailsCard({
   fire,
@@ -28,17 +39,14 @@ export function FireDetailsCard({
   onFlyHere,
   isCompact = false,
 }: FireDetailsCardProps) {
-  const rows: [string, string][] = [
-    ['Size', formatFireSize(fire.sizeHa)],
-    ['Area on map', isAreaMapped ? MAPPED_AREA_TEXT : APPROXIMATE_AREA_TEXT],
-    ['Discovered', formatLocalDateTime(fire.ignitionDateMs)],
-    ['Location', fire.location ?? 'Not reported'],
-    ['Cause', fire.cause ?? 'Not reported'],
-  ];
+  const rows = buildDetailRows(fire, isAreaMapped);
   return (
     <Card
       aria-labelledby="fire-popup-title"
-      className={cn('flex w-full shrink-0 flex-col', isCompact ? 'gap-2 p-3' : 'gap-3 p-4 sm:w-80')}
+      className={cn(
+        'flex w-full flex-col',
+        isCompact ? 'min-h-0 shrink gap-2 overflow-y-auto p-3' : 'shrink-0 gap-3 p-4 sm:w-80',
+      )}
     >
       <header className="flex items-start gap-2">
         <div className="min-w-0 flex-1">
