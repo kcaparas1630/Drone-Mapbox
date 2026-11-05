@@ -6,6 +6,8 @@ export const MAP_STYLE = {
   DRONE_LAYER_ID: 'drone-layer',
   ROUTE_SOURCE_ID: 'route-line',
   ROUTE_LAYER_ID: 'route-line',
+  FIRE_SOURCE_ID: 'fires',
+  FIRE_LAYER_ID: 'fire-points',
   DEM_URL: 'mapbox://mapbox.mapbox-terrain-dem-v1',
   DEM_TILE_SIZE: 512,
   DEM_MAX_ZOOM: 14,

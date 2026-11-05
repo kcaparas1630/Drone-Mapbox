@@ -6,9 +6,13 @@ import { useOnlineStatus } from '@/shared/lib/browser';
 import { reportError } from '@/shared/lib/report-error';
 
 import type { MapStatus, MapStatusPatch } from '../model/map-status.types';
+import { useActiveFireFeed } from '../model/use-active-fire-feed';
 import { useDroneSimulation } from '../model/use-drone-simulation';
+import type { FireHover } from '../model/fire-hover.types';
+import { useFirePointsLayer } from '../model/use-fire-points-layer';
 import { useMapboxMap } from '../model/use-mapbox-map';
 import { useRouteLine } from '../model/use-route-line';
+import { FireTooltip } from './fire-tooltip';
 import { MapStatusOverlay } from './map-status-overlay';
 
 export type MapViewProps = {
@@ -32,6 +36,8 @@ export function MapView({ mapboxToken, isDevBuild, status, onStatusPatch }: MapV
   const containerRef = useRef<HTMLDivElement>(null);
   const [spawn] = useState(readLaunchSpawn);
   const isOnline = useOnlineStatus();
+  const [fireHover, setFireHover] = useState<FireHover | null>(null);
+  const fires = useActiveFireFeed();
   const map = useMapboxMap({
     containerRef,
     accessToken: mapboxToken,
@@ -41,9 +47,11 @@ export function MapView({ mapboxToken, isDevBuild, status, onStatusPatch }: MapV
   });
   useDroneSimulation(map, spawn, isDevBuild);
   useRouteLine(map);
+  useFirePointsLayer(map, fires, setFireHover);
   return (
     <div className="absolute inset-0 bg-background">
       <div ref={containerRef} className="h-full w-full touch-none" data-testid="map-container" />
+      <FireTooltip hover={fireHover} />
       <MapStatusOverlay status={status} isOnline={isOnline} />
     </div>
   );
