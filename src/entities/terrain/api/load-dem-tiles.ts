@@ -1,5 +1,5 @@
 // Loads the terrain-DEM tiles covering a route corridor, decoded and cached in memory per tile (ADR 022).
-import { fetchImageBitmap } from '@/shared/api';
+import { fetchImageBitmap, mapboxRequestBudgets } from '@/shared/api';
 import { ROUTE_TUNING } from '@/shared/config';
 
 import { decodeTerrainRgb } from '../lib/decode-terrain-rgb';
@@ -9,6 +9,11 @@ const DEM_TILESET_URL = 'https://api.mapbox.com/v4/mapbox.mapbox-terrain-dem-v1'
 const VALID_TILE_SIZES = new Set([256, 512]);
 
 const tileByKey = new Map<string, DemTile>();
+
+// Returns the z/x/y key a tile is cached and requested under.
+function toTileKey(zoom: number, x: number, y: number): string {
+  return `${String(zoom)}/${String(x)}/${String(y)}`;
+}
 
 // Draws the bitmap on an offscreen canvas and decodes its pixels; null unless it is a 256 or 512 px square.
 function decodeDemBitmap(bitmap: ImageBitmap): Float32Array | null {
@@ -35,7 +40,7 @@ async function loadDemTile(
   y: number,
   signal: AbortSignal,
 ): Promise<DemTile | null> {
-  const key = `${String(zoom)}/${String(x)}/${String(y)}`;
+  const key = toTileKey(zoom, x, y);
   const cached = tileByKey.get(key);
   if (cached !== undefined) {
     return cached;
@@ -56,18 +61,26 @@ async function loadDemTile(
   return tile;
 }
 
-// Returns every tile in the range, or null if any tile failed, so planning falls back to the great circle.
+// Returns every tile in the range, or null if any tile failed or the uncached ones do not fit the DEM budget.
 export async function loadDemTiles(
   accessToken: string,
   range: DemTileRange,
   signal: AbortSignal,
 ): Promise<DemTile[] | null> {
-  const requests: Promise<DemTile | null>[] = [];
+  const coordinates: (readonly [number, number])[] = [];
   for (let x = range.xMin; x <= range.xMax; x += 1) {
     for (let y = range.yMin; y <= range.yMax; y += 1) {
-      requests.push(loadDemTile(accessToken, range.zoom, x, y, signal));
+      coordinates.push([x, y]);
     }
   }
-  const tiles = await Promise.all(requests);
+  const uncachedCount = coordinates.filter(
+    ([x, y]) => !tileByKey.has(toTileKey(range.zoom, x, y)),
+  ).length;
+  if (uncachedCount > 0 && !mapboxRequestBudgets.demTiles.reserve(uncachedCount).isAllowed) {
+    return null;
+  }
+  const tiles = await Promise.all(
+    coordinates.map(([x, y]) => loadDemTile(accessToken, range.zoom, x, y, signal)),
+  );
   return tiles.every((tile): tile is DemTile => tile !== null) ? tiles : null;
 }
