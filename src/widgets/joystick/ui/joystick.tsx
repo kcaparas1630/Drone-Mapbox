@@ -1,18 +1,20 @@
 // Touch controls (coarse pointers only): left stick moves and turns, right stick climbs, boost button (§3.2).
-import { useEffect, useRef } from 'react';
+import { type ReactNode, useEffect, useRef } from 'react';
 
 import { droneInputStarted } from '@/entities/drone';
 import { setTouchDroneInput } from '@/features/control-drone';
 import { useAppDispatch } from '@/shared/lib/redux';
-import { Button } from '@/shared/ui';
+import { cn } from '@/shared/ui';
 
 import type { StickVector } from '../lib/compute-stick-vector';
+import { BoostButton } from './boost-button';
 import { TouchStick } from './touch-stick';
 
-export type JoystickProps = { isCompact?: boolean };
+// children: instruments shown between the sticks, with Boost moving next to the climb slider (§4.2).
+export type JoystickProps = { isCompact?: boolean; children?: ReactNode };
 
 // Renders the controls along the bottom edge; hidden on mouse/keyboard devices; only the controls take touches.
-export function Joystick({ isCompact = false }: JoystickProps) {
+export function Joystick({ isCompact = false, children }: JoystickProps) {
   const dispatch = useAppDispatch();
   const isActiveRef = useRef({ move: false, climb: false });
   useEffect(
@@ -35,34 +37,35 @@ export function Joystick({ isCompact = false }: JoystickProps) {
     reportActivity('climb', y !== 0);
     setTouchDroneInput({ vertical: y });
   };
+  const climbStick = (
+    <TouchStick
+      label="Climb and descend"
+      shape="tall"
+      isCompact={isCompact}
+      onChange={handleClimb}
+    />
+  );
   return (
-    <div className="hidden w-full items-end justify-between gap-4 pointer-coarse:flex">
+    <div
+      className={cn(
+        'hidden w-full items-end justify-between pointer-coarse:flex',
+        isCompact ? 'gap-2' : 'gap-4',
+      )}
+    >
       <TouchStick label="Move and turn" shape="round" isCompact={isCompact} onChange={handleMove} />
-      <Button
-        variant="secondary"
-        className="pointer-events-auto mb-2 rounded-full select-none"
-        aria-label="Boost (hold)"
-        onPointerDown={() => {
-          setTouchDroneInput({ isBoosting: true });
-        }}
-        onPointerUp={() => {
-          setTouchDroneInput({ isBoosting: false });
-        }}
-        onPointerCancel={() => {
-          setTouchDroneInput({ isBoosting: false });
-        }}
-        onPointerLeave={() => {
-          setTouchDroneInput({ isBoosting: false });
-        }}
-      >
-        Boost
-      </Button>
-      <TouchStick
-        label="Climb and descend"
-        shape="tall"
-        isCompact={isCompact}
-        onChange={handleClimb}
-      />
+      {children === undefined ? (
+        <BoostButton />
+      ) : (
+        <div className="flex min-w-0 flex-1 items-end justify-center">{children}</div>
+      )}
+      {children === undefined ? (
+        climbStick
+      ) : (
+        <div className="flex shrink-0 items-end gap-2">
+          <BoostButton />
+          {climbStick}
+        </div>
+      )}
     </div>
   );
 }
