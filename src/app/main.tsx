@@ -1,4 +1,5 @@
 // Entry point: validates the environment, checks WebGL2, starts prefs persistence and mounts the app.
+import './configure-zod';
 import 'mapbox-gl/dist/mapbox-gl.css';
 import './styles/globals.css';
 
