@@ -1,4 +1,4 @@
-// Fire hit-test layer: status-coloured circles that show a tooltip on hover and open the popup on click (§7).
+// Fire hit-test layer: status-coloured circles with name labels; hover shows a tooltip, click opens the popup (§7).
 import type { GeoJSONSource, Map as MapboxMap, MapMouseEvent } from 'mapbox-gl';
 import { useEffect, useEffectEvent } from 'react';
 
@@ -26,6 +26,26 @@ function ensureFireLayer(map: MapboxMap): void {
       'circle-stroke-color': '#ffffff',
       'circle-stroke-width': 2,
       'circle-pitch-alignment': 'map',
+    },
+  });
+  map.addLayer({
+    id: MAP_STYLE.FIRE_LABEL_LAYER_ID,
+    type: 'symbol',
+    source: MAP_STYLE.FIRE_SOURCE_ID,
+    minzoom: 7,
+    layout: {
+      'text-field': ['get', 'incidentName'],
+      'text-font': ['DIN Pro Medium', 'Arial Unicode MS Regular'],
+      'text-size': ['interpolate', ['linear'], ['zoom'], 7, 11, 14, 14],
+      'text-anchor': 'top',
+      'text-offset': [0, 1],
+      'text-max-width': 12,
+      'text-optional': true,
+    },
+    paint: {
+      'text-color': '#ffffff',
+      'text-halo-color': 'rgba(20, 12, 8, 0.9)',
+      'text-halo-width': 1.6,
     },
   });
 }

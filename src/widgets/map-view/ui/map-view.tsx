@@ -9,10 +9,12 @@ import type { MapStatus, MapStatusPatch } from '../model/map-status.types';
 import { useActiveFireFeed } from '../model/use-active-fire-feed';
 import { useDroneSimulation } from '../model/use-drone-simulation';
 import type { FireHover } from '../model/fire-hover.types';
+import { useFireFootprintsLayer } from '../model/use-fire-footprints-layer';
 import { useFirePointsLayer } from '../model/use-fire-points-layer';
 import { useLowFrameRateFallback } from '../model/use-low-frame-rate-fallback';
 import { useMapboxMap } from '../model/use-mapbox-map';
 import { useRouteLine } from '../model/use-route-line';
+import { useTerrainAwareRoute } from '../model/use-terrain-aware-route';
 import { FireTooltip } from './fire-tooltip';
 import { MapStatusOverlay } from './map-status-overlay';
 
@@ -49,7 +51,9 @@ export function MapView({ mapboxToken, isDevBuild, status, onStatusPatch }: MapV
   useDroneSimulation(map, { spawn, isDevBuild, fires, isReducedDetail: status.isReducedDetail });
   useLowFrameRateFallback(map, onStatusPatch);
   useRouteLine(map);
+  useTerrainAwareRoute(mapboxToken);
   useFirePointsLayer(map, fires, setFireHover);
+  useFireFootprintsLayer(map, fires);
   return (
     <div className="absolute inset-0 bg-background">
       <div ref={containerRef} className="h-full w-full touch-none" data-testid="map-container" />

@@ -11,6 +11,7 @@ import { useAppStore } from '@/shared/lib/redux';
 import { createFrameLoopContext, type FrameLoopContext } from './frame-loop-context';
 import { publishDebugContext } from './publish-debug-context';
 import { registerCameraInput } from './register-camera-input';
+import { registerFlamePicking } from './register-flame-picking';
 import { registerSimulationLifecycle } from './register-simulation-lifecycle';
 import { resetDroneLayer } from './reset-drone-layer';
 import { runFrameLoop } from './run-frame-loop';
@@ -41,8 +42,8 @@ export function useDroneSimulation(map: MapboxMap | null, options: DroneSimulati
   useEffect(() => {
     firesRef.current = fires;
     if (contextRef.current !== null) {
-      contextRef.current.fireBeacons.fires = fires ?? [];
-      contextRef.current.fireBeacons.version += 1;
+      contextRef.current.fireFeed.fires = fires ?? [];
+      contextRef.current.fireFeed.version += 1;
     }
   }, [fires]);
   useEffect(() => {
@@ -51,8 +52,8 @@ export function useDroneSimulation(map: MapboxMap | null, options: DroneSimulati
     }
     const context = createFrameLoopContext(map, createSimWorld(spawnRef.current), store);
     Object.assign(context.flags, loopFlagsRef.current);
-    context.fireBeacons.fires = firesRef.current ?? [];
-    context.fireBeacons.version = 1;
+    context.fireFeed.fires = firesRef.current ?? [];
+    context.fireFeed.version = 1;
     contextRef.current = context;
     if (isDevBuild) {
       publishDebugContext(context);
@@ -64,9 +65,11 @@ export function useDroneSimulation(map: MapboxMap | null, options: DroneSimulati
       context.orbit,
       store,
     );
+    const unregisterFlamePicking = registerFlamePicking(map, context);
     const stopLoop = runFrameLoop(context);
     return () => {
       stopLoop();
+      unregisterFlamePicking();
       unregisterCameraInput();
       unregisterLifecycle();
       publishDebugContext(null);

@@ -10,7 +10,9 @@ import {
   type OrbitState,
 } from '@/entities/map-camera';
 import type { RouteProgressPoint } from '@/entities/route';
-import { createTerrainFollowState, type TerrainFollowState } from '@/entities/terrain';
+
+import { createFlamePicks } from './create-flame-picks';
+import type { FlamePicks } from './flame-picks.types';
 
 export type FrameLoopContext = {
   map: MapboxMap;
@@ -19,9 +21,9 @@ export type FrameLoopContext = {
   orbit: OrbitState;
   cameraInput: ChaseCameraInput;
   cameraPose: ChaseCameraPose;
-  terrainFollow: TerrainFollowState;
   routeProgress: RouteProgressPoint;
-  fireBeacons: { fires: readonly Fire[]; version: number };
+  fireFeed: { fires: readonly Fire[]; version: number };
+  flamePicks: FlamePicks;
   flags: { isReducedMotion: boolean; isReducedDetail: boolean; isContextLost: boolean };
 };
 
@@ -55,9 +57,17 @@ export function createFrameLoopContext(
       lookAtLat: 0,
       lookAtAltitudeMsl: 0,
     },
-    terrainFollow: createTerrainFollowState(),
-    routeProgress: { lng: 0, lat: 0, pathBearingRad: 0, remainingM: 0, isComplete: false },
-    fireBeacons: { fires: [], version: 0 },
+    routeProgress: {
+      lng: 0,
+      lat: 0,
+      altitudeMsl: 0,
+      profileSlope: 0,
+      pathBearingRad: 0,
+      remainingM: 0,
+      isComplete: false,
+    },
+    fireFeed: { fires: [], version: 0 },
+    flamePicks: createFlamePicks(),
     flags: { isReducedMotion: false, isReducedDetail: false, isContextLost: false },
   };
 }
