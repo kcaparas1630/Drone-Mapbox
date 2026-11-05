@@ -1,20 +1,33 @@
 // Public API of the fire entity: the BCWS feed API, normalised fires, the Out filter, selection and status display.
-export { fireApi } from './api/fire.api';
+export { fireApi, useGetFirePerimetersQuery } from './api/fire.api';
 export type { FireFeedQueryArgs } from './api/fire.api';
 export { useFireFeedQuery } from './api/use-fire-feed-query';
 export type { FireFeedQueryOptions } from './api/use-fire-feed-query';
 export { FIRE_STATUS_PALETTE } from './config/fire-status-palette';
-export { computeBeaconPulse } from './lib/compute-beacon-pulse';
-export { computeBeaconSize } from './lib/compute-beacon-size';
-export type { BeaconSize } from './lib/compute-beacon-size';
+export { FIRE_STATUS_SWATCH_CLASSES } from './config/fire-status-swatch-classes';
+export { loadFireModel } from './api/load-fire-model';
+export type { FireModelGeometry } from './api/load-fire-model';
+export { FIRE_MODEL } from './config/fire-model';
+export { computeFlameFlicker } from './lib/compute-flame-flicker';
+export type { FlameFlicker } from './lib/compute-flame-flicker';
+export { computeFlameHeight } from './lib/compute-flame-height';
 export { findNearbyFires } from './lib/find-nearby-fires';
+export { formatFireSize } from './lib/format-fire-size';
+export { sortFiresByDistance } from './lib/sort-fires-by-distance';
 export {
   fireFilterSlice,
   outFiresVisibilityChanged,
   selectIsOutIncluded,
 } from './model/fire-filter.slice';
 export type { FireFilterState } from './model/fire-filter.slice';
-export type { Fire, FireFeedSnapshot, FireStatus, NearbyFires } from './model/fire.types';
+export type {
+  Fire,
+  FireFeedSnapshot,
+  FirePerimeter,
+  FireStatus,
+  NearbyFires,
+  RankedFire,
+} from './model/fire.types';
 export {
   fireDeselected,
   fireSelected,

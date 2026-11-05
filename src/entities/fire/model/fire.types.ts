@@ -26,4 +26,13 @@ export type FireFeedSnapshot = {
   isTruncated: boolean;
 };
 
+// One mapped burned area: the outer ring of each polygon as [lng, lat] pairs (ADR 023).
+export type FirePerimeter = {
+  fireNumber: string;
+  sizeHa: number | null;
+  rings: [number, number][][];
+};
+
+export type RankedFire = { fire: Fire; distanceM: number | null; bearingRad: number | null };
+
 export type NearbyFires = { count: number; nearest: { fire: Fire; distanceM: number } | null };
