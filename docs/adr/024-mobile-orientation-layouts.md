@@ -28,9 +28,9 @@ Portrait:
 3. Keep the stacked layout: rejected by the owner.
 
 Landscape:
-1. **The desktop cockpit, smaller**: same positions (brand and search on top, fire panel on the
-   right, nav cluster lower left, route banner bottom centre), compact sizes, and the touch sticks
-   along the bottom. The fire panel starts collapsed to its header in the top row; only while it
+1. **The desktop cockpit, smaller**: brand, search and the fire panel on top, compact sizes, and
+   one bottom bar with the touch sticks in the corners and the nav cluster between them; the route
+   banner sits just above the bar. The fire panel starts collapsed to its header in the top row; only while it
    is open (or a fire is selected) does it take a full-height column and narrow the flight area.
    A permanently open column left the flight area too cramped (owner feedback). The compass and
    telemetry sit in one bottom bar between the sticks (as drone-controller apps do), not stacked
