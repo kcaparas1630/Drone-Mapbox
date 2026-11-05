@@ -8,11 +8,19 @@ import { useAppDispatch, useAppSelector } from '@/shared/lib/redux';
 
 import { toRecentOptions } from '../lib/to-recent-options';
 import { handleSearchKey } from './handle-search-key';
+import type { ResolvePlaceProblem } from './resolve-place';
 import type { SearchOption } from './search.schema';
 import { usePlaceSearch } from './use-place-search';
 import { useSearchShortcut } from './use-search-shortcut';
 
 const MIN_QUERY_LENGTH = 2;
+
+const RESOLVE_FAILURE_MESSAGES: Readonly<Record<ResolvePlaceProblem, string>> = {
+  'outside-bc': 'That place is outside British Columbia',
+  invalid: 'Could not load that place.',
+  failed: 'Could not load that place.',
+  'rate-limited': 'Search limit reached — try again later.',
+};
 
 // Returns everything the search bar renders and the handlers it wires to the input.
 export function useSearchCombobox(mapboxToken: string) {
@@ -36,10 +44,7 @@ export function useSearchCombobox(mapboxToken: string) {
     }
     const result = await search.resolvePlace(option);
     if (!result.isOk) {
-      const isOutside = result.error === 'outside-bc';
-      toast.error(
-        isOutside ? 'That place is outside British Columbia' : 'Could not load that place.',
-      );
+      toast.error(RESOLVE_FAILURE_MESSAGES[result.error]);
       return;
     }
     dispatch(flyToPlace(result.value));
