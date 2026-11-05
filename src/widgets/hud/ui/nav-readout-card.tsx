@@ -27,8 +27,9 @@ export function NavReadoutCard({ snapshot, placeName, isCompact }: NavReadoutCar
       <div className="min-w-0">
         <p
           className={cn(
-            'flex items-center gap-1.5 leading-tight font-semibold',
+            'flex items-center gap-1.5 font-semibold',
             isCompact ? 'text-xs' : 'text-sm',
+            'leading-tight',
           )}
         >
           <MapPin aria-hidden="true" className="size-4 shrink-0 text-primary" />
