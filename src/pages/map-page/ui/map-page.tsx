@@ -1,6 +1,7 @@
 // The only page: the full-screen map with every widget layered on top; owns the map status shared with the HUD.
 import { useReducer } from 'react';
 
+import { FirePopup } from '@/widgets/fire-popup';
 import { INITIAL_MAP_STATUS, MapView, mergeMapStatus } from '@/widgets/map-view';
 import { RouteBanner } from '@/widgets/route-banner';
 import { SearchBar } from '@/widgets/search-bar';
@@ -27,7 +28,10 @@ export function MapPage({ mapboxToken, isDevBuild }: MapPageProps) {
             <SearchBar mapboxToken={mapboxToken} />
           </div>
         </div>
-        <div className="flex flex-col items-center gap-2 pb-8 sm:pb-6">
+        <div className="flex flex-col items-center gap-2 pb-8 sm:items-end sm:pb-6">
+          <div className="pointer-events-auto flex w-full justify-center sm:w-auto sm:justify-end">
+            <FirePopup />
+          </div>
           <div className="pointer-events-auto flex w-full justify-center">
             <RouteBanner />
           </div>

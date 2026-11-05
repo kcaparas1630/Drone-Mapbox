@@ -1,2 +1,2 @@
 // Public API of the fire-popup widget.
-export {};
+export { FirePopup } from './ui/fire-popup';
