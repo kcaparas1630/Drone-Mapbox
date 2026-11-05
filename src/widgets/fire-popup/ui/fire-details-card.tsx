@@ -2,7 +2,7 @@
 import { ExternalLink, X } from 'lucide-react';
 
 import { type Fire, FireStatusBadge, formatFireSize } from '@/entities/fire';
-import { Button, Card } from '@/shared/ui';
+import { Button, Card, cn } from '@/shared/ui';
 
 import { formatLocalDateTime } from '../lib/format-local-date-time';
 import { FireSourceNote } from './fire-source-note';
@@ -13,6 +13,7 @@ export type FireDetailsCardProps = {
   isAreaMapped: boolean;
   onClose: () => void;
   onFlyHere: () => void;
+  isCompact?: boolean;
 };
 
 const MAPPED_AREA_TEXT = 'Mapped BCWS perimeter';
@@ -25,6 +26,7 @@ export function FireDetailsCard({
   isAreaMapped,
   onClose,
   onFlyHere,
+  isCompact = false,
 }: FireDetailsCardProps) {
   const rows: [string, string][] = [
     ['Size', formatFireSize(fire.sizeHa)],
@@ -36,7 +38,7 @@ export function FireDetailsCard({
   return (
     <Card
       aria-labelledby="fire-popup-title"
-      className="flex w-full shrink-0 flex-col gap-3 p-4 sm:w-80"
+      className={cn('flex w-full shrink-0 flex-col', isCompact ? 'gap-2 p-3' : 'gap-3 p-4 sm:w-80')}
     >
       <header className="flex items-start gap-2">
         <div className="min-w-0 flex-1">
