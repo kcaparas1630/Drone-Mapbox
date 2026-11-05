@@ -49,6 +49,16 @@ Detection option 1, portrait option 1, landscape option 1.
 - Widgets take size props (`isCompact`, `isCollapsed`, `variant`) instead of reading the media
   queries themselves, so the decision lives in one place.
 - The portrait notice is dismissed for the session only (React state, nothing persisted).
+- Landscape camera framing (owner feedback, 2026-11-05): in a ~270–410 CSS px tall viewport the
+  chase camera draws the drone ~22.6 % of the height below centre (behaviour §4), under the bottom
+  bar's telemetry card. The landscape cockpit measures its top row and centre instruments with a
+  `ResizeObserver`; the page turns that into padding that draws the drone three quarters of the
+  way down the clear band and hands it to `MapView`, which calls `map.setPadding`. Mapbox applies
+  padding as a projection offset, so it works with `setFreeCameraOptions` and the three.js layer
+  (which uses Mapbox's matrix) without changing the chase-camera pose. Options the owner weighed:
+  the drone in the middle of the band (rejected: the view tilts so far down that distant fires
+  leave it), and a gap in the bottom bar with the camera unchanged (rejected: the drone still sits
+  at bar level). Cost: the picture shifts up ~60 px and the horizon reaches the top edge.
 
 ## Consequences
 

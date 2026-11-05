@@ -2,7 +2,12 @@
 import { useReducer, useState } from 'react';
 
 import { useViewportLayout } from '@/shared/lib/browser';
-import { INITIAL_MAP_STATUS, MapView, mergeMapStatus } from '@/widgets/map-view';
+import {
+  type CameraPadding,
+  INITIAL_MAP_STATUS,
+  MapView,
+  mergeMapStatus,
+} from '@/widgets/map-view';
 
 import { useEscapeShortcut } from '../model/use-escape-shortcut';
 import { useReloadOnAuthFailure } from '../model/use-reload-on-auth-failure';
@@ -12,10 +17,13 @@ import { PortraitCockpit } from './portrait-cockpit';
 
 export type MapPageProps = { mapboxToken: string; isDevBuild: boolean };
 
-// Renders the map once, a soft edge vignette, and the cockpit overlay chosen by the viewport layout.
+const NO_CAMERA_PADDING: CameraPadding = { topPx: 0, bottomPx: 0 };
+
+// Renders the map once, a vignette and the layout's cockpit; only the landscape one pads the camera (§4.2).
 export function MapPage({ mapboxToken, isDevBuild }: MapPageProps) {
   const [mapStatus, patchMapStatus] = useReducer(mergeMapStatus, INITIAL_MAP_STATUS);
   const [isRotateNoticeDismissed, setIsRotateNoticeDismissed] = useState(false);
+  const [landscapePadding, setLandscapePadding] = useState(NO_CAMERA_PADDING);
   const layout = useViewportLayout();
   useEscapeShortcut();
   useReloadOnAuthFailure(mapStatus.isAuthFailed);
@@ -26,6 +34,7 @@ export function MapPage({ mapboxToken, isDevBuild }: MapPageProps) {
         isDevBuild={isDevBuild}
         status={mapStatus}
         onStatusPatch={patchMapStatus}
+        cameraPadding={layout === 'mobile-landscape' ? landscapePadding : NO_CAMERA_PADDING}
       />
       <div
         aria-hidden="true"
@@ -35,7 +44,11 @@ export function MapPage({ mapboxToken, isDevBuild }: MapPageProps) {
         <DesktopCockpit mapboxToken={mapboxToken} mapStatus={mapStatus} />
       ) : null}
       {layout === 'mobile-landscape' ? (
-        <LandscapeCockpit mapboxToken={mapboxToken} mapStatus={mapStatus} />
+        <LandscapeCockpit
+          mapboxToken={mapboxToken}
+          mapStatus={mapStatus}
+          onCameraPaddingChange={setLandscapePadding}
+        />
       ) : null}
       {layout === 'mobile-portrait' ? (
         <PortraitCockpit
