@@ -10,8 +10,10 @@ import { useAppDispatch, useAppSelector } from '@/shared/lib/redux';
 
 import { FireDetailsCard } from './fire-details-card';
 
+export type FirePopupProps = { isCompact?: boolean };
+
 // Renders the popup for the selected fire, or nothing when none is selected or it left the feed.
-export function FirePopup() {
+export function FirePopup({ isCompact = false }: FirePopupProps) {
   const dispatch = useAppDispatch();
   const fireNumber = useAppSelector(selectSelectedFireNumber);
   const { data: feed } = useFireFeedQuery();
@@ -23,6 +25,7 @@ export function FirePopup() {
   return (
     <FireDetailsCard
       fire={fire}
+      isCompact={isCompact}
       fetchedAtMs={feed.fetchedAtMs}
       isAreaMapped={
         perimeters?.some((perimeter) => perimeter.fireNumber === fire.fireNumber) ?? false

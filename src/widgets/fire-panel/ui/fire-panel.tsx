@@ -1,5 +1,4 @@
 // Right-hand fire panel: feed freshness, status chips, fires nearest first, and the Out toggle (§7.1).
-import { ChevronDown, Flame } from 'lucide-react';
 import { useMemo, useState } from 'react';
 
 import { selectDroneSnapshot } from '@/entities/drone';
@@ -12,19 +11,27 @@ import { filterFiresByStatus } from '../lib/filter-fires-by-status';
 import { useStatusFilter } from '../model/use-status-filter';
 import { FireFeedBadge } from './fire-feed-badge';
 import { FireList } from './fire-list';
+import { FirePanelHeader } from './fire-panel-header';
 import { FireStatusChips } from './fire-status-chips';
 import { OutFiresToggle } from './out-fires-toggle';
 
 const WIDE_SCREEN_QUERY = '(min-width: 640px)';
 
-// Returns whether the panel starts open: yes on wide screens, collapsed on phones.
+// Returns whether the panel starts open on its own: yes on wide screens, collapsed on narrow ones.
 function readIsInitiallyOpen(): boolean {
   return typeof window.matchMedia !== 'function' || window.matchMedia(WIDE_SCREEN_QUERY).matches;
 }
 
+// onOpenChange lets the page make room for the open panel (phone landscape, §4.2).
+export type FirePanelProps = {
+  isOpenByDefault?: boolean;
+  isCompact?: boolean;
+  onOpenChange?: (isOpen: boolean) => void;
+};
+
 // Renders the collapsible panel from the shared feed cache and the ≤ 4 Hz drone snapshot.
-export function FirePanel() {
-  const [isOpen, setIsOpen] = useState(readIsInitiallyOpen);
+export function FirePanel({ isOpenByDefault, isCompact = false, onOpenChange }: FirePanelProps) {
+  const [isOpen, setIsOpen] = useState(() => isOpenByDefault ?? readIsInitiallyOpen());
   const snapshot = useAppSelector(selectDroneSnapshot);
   const { data: feed } = useFireFeedQuery();
   const sorted = useMemo(() => sortFiresByDistance(feed?.fires ?? [], snapshot), [feed, snapshot]);
@@ -36,33 +43,34 @@ export function FirePanel() {
   return (
     <section
       aria-label="Active fires"
-      className="flex max-h-full min-h-0 w-full shrink flex-col overflow-hidden rounded-panel border border-panel-border bg-panel shadow-xl backdrop-blur-md sm:w-80"
+      className={cn(
+        'flex max-h-full min-h-0 w-full shrink flex-col overflow-hidden rounded-panel border border-panel-border bg-panel shadow-xl backdrop-blur-md',
+        isCompact ? '' : 'sm:w-80',
+      )}
     >
-      <button
-        type="button"
-        aria-expanded={isOpen}
-        aria-controls="fire-panel-body"
-        onClick={() => {
+      <FirePanelHeader
+        fireCount={sorted.length}
+        isOpen={isOpen}
+        onToggle={() => {
           setIsOpen(!isOpen);
+          onOpenChange?.(!isOpen);
         }}
-        className="flex min-h-11 items-center gap-2 px-3 py-2 text-left"
-      >
-        <Flame aria-hidden="true" className="size-4 text-primary" />
-        <span className="flex-1 text-sm font-semibold">
-          Active fires <span className="text-muted-foreground">({sorted.length})</span>
-        </span>
-        <ChevronDown
-          aria-hidden="true"
-          className={cn('size-4 transition-transform', isOpen ? 'rotate-180' : '')}
-        />
-      </button>
+      />
       <div
         id="fire-panel-body"
         hidden={!isOpen}
-        className="flex min-h-0 flex-1 flex-col gap-2.5 border-t border-panel-border px-3 pt-2.5 pb-3"
+        className={cn(
+          'flex min-h-0 flex-1 flex-col border-t border-panel-border',
+          isCompact ? 'gap-2 px-2 pt-2 pb-2' : 'gap-2.5 px-3 pt-2.5 pb-3',
+        )}
       >
         <FireFeedBadge />
-        <FireStatusChips filters={chips} selectedId={filterId} onSelect={setFilterId} />
+        <FireStatusChips
+          filters={chips}
+          selectedId={filterId}
+          isCompact={isCompact}
+          onSelect={setFilterId}
+        />
         <FireList
           fires={
             selectedFilter === undefined ? sorted : filterFiresByStatus(sorted, selectedFilter)

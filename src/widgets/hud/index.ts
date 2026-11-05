@@ -2,6 +2,7 @@
 export { FlightHud } from './ui/flight-hud';
 export type { FlightHudProps } from './ui/flight-hud';
 export { NavCluster } from './ui/nav-cluster';
-export type { NavClusterProps } from './ui/nav-cluster';
+export type { NavClusterProps, NavClusterVariant } from './ui/nav-cluster';
 export { OfflineBanner } from './ui/offline-banner';
 export { PwaControls } from './ui/pwa-controls';
+export type { PwaControlsProps } from './ui/pwa-controls';

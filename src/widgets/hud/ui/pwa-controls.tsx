@@ -8,8 +8,10 @@ import { Button } from '@/shared/ui';
 
 const UPDATE_TOAST_ID = 'fireflybc-update';
 
-// Renders the install button when available and raises the update toast once a new version is ready.
-export function PwaControls() {
+export type PwaControlsProps = { isCompact?: boolean };
+
+// Renders the install button when available (icon only when compact) and raises the update toast once ready.
+export function PwaControls({ isCompact = false }: PwaControlsProps) {
   const { canInstall, isUpdateReady } = usePwaStatus();
   useEffect(() => {
     if (isUpdateReady) {
@@ -24,9 +26,14 @@ export function PwaControls() {
     return null;
   }
   return (
-    <Button size="small" variant="outline" onClick={() => void pwaStatusSource.showInstallPrompt()}>
+    <Button
+      size={isCompact ? 'icon' : 'small'}
+      variant="outline"
+      aria-label={isCompact ? 'Install app' : undefined}
+      onClick={() => void pwaStatusSource.showInstallPrompt()}
+    >
       <Download aria-hidden="true" className="size-4" />
-      Install app
+      {isCompact ? null : 'Install app'}
     </Button>
   );
 }

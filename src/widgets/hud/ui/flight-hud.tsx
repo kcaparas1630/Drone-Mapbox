@@ -3,11 +3,15 @@ import { Flame } from 'lucide-react';
 
 import { type DroneMode, selectDroneMode, selectDroneSnapshot } from '@/entities/drone';
 import { useAppSelector } from '@/shared/lib/redux';
-import { Badge } from '@/shared/ui';
+import { Badge, cn } from '@/shared/ui';
 
 import { HudNotes } from './hud-notes';
 
-export type FlightHudProps = { isReducedDetail: boolean; isTileStalled: boolean };
+export type FlightHudProps = {
+  isReducedDetail: boolean;
+  isTileStalled: boolean;
+  isCompact?: boolean;
+};
 
 const MODE_LABELS: Readonly<Record<DroneMode, string>> = {
   idle: 'Ready',
@@ -17,13 +21,18 @@ const MODE_LABELS: Readonly<Record<DroneMode, string>> = {
   arrived: 'Arrived',
 };
 
-// Renders the brand row with the live mode, and any active notes underneath.
-export function FlightHud({ isReducedDetail, isTileStalled }: FlightHudProps) {
+// Renders the brand row with the live mode, and any active notes underneath; tighter on phones.
+export function FlightHud({ isReducedDetail, isTileStalled, isCompact = false }: FlightHudProps) {
   const mode = useAppSelector(selectDroneMode);
   const snapshot = useAppSelector(selectDroneSnapshot);
   return (
-    <header className="flex w-fit max-w-full flex-col gap-1.5 rounded-panel border border-panel-border bg-panel px-3 py-2 shadow-xl backdrop-blur-md">
-      <div className="flex items-center gap-2.5">
+    <header
+      className={cn(
+        'flex w-fit max-w-full flex-col gap-1.5 rounded-panel border border-panel-border bg-panel shadow-xl backdrop-blur-md',
+        isCompact ? 'px-2.5 py-1.5' : 'px-3 py-2',
+      )}
+    >
+      <div className={cn('flex items-center', isCompact ? 'gap-2' : 'gap-2.5')}>
         <span className="flex items-center gap-1.5 text-sm font-bold tracking-tight">
           <span className="grid size-6 place-items-center rounded-md bg-gradient-to-br from-amber-400 to-red-600 shadow-md">
             <Flame aria-hidden="true" className="size-3.5 text-white" />
